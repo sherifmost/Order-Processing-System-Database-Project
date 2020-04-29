@@ -9,11 +9,13 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 public class LoginPanel extends JPanel {
 	private JLabel usernameLabel, passwordLabel;
-	private JTextField usernameTextField, passwordTextField;
+	private JTextField usernameTextField;
+	private JPasswordField passwordField;
 	private JButton loginButton, signUpButton;
 	private SwitchListener switchListener;
 	
@@ -25,7 +27,7 @@ public class LoginPanel extends JPanel {
 		usernameLabel = new JLabel("Username: ");
 		passwordLabel = new JLabel("Password: ");
 		usernameTextField = new JTextField(15);
-		passwordTextField = new JTextField(15);
+		passwordField = new JPasswordField(15);
 		loginButton = new JButton("Login");
 		signUpButton = new JButton("Sign up");
 		this.setLayout(new GridBagLayout());
@@ -46,7 +48,7 @@ public class LoginPanel extends JPanel {
 		this.add(passwordLabel, gc);
 		gc.gridx = 1;
 		gc.gridy = 1;
-		this.add(passwordTextField, gc);
+		this.add(passwordField, gc);
 		gc.gridy = 2;
 		gc.gridx = 0;
 		gc.insets = new Insets(30, 0, 0, 0);
