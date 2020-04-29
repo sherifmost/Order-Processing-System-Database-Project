@@ -3,6 +3,8 @@ package view;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -18,6 +20,7 @@ public class SignUpPanel extends JPanel {
 	phoneField, shippingAddressField;
 	private JPasswordField passwordField, retypePasswordField;
 	private JButton registerButton;
+	private Listener listener;
 
 	public SignUpPanel() {
 		 registrationFormLabel = new JLabel("Registration Form");
@@ -104,6 +107,19 @@ public class SignUpPanel extends JPanel {
 		 add(registerButton, gc);
 		 this.setBackground(java.awt.Color.CYAN);
 		 registerButton.setBackground(java.awt.Color.GREEN);
+		 registerButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				listener.eventOccurred(new SignUpEvent(this, usernameField.getText(),
+						firstNameField.getText(), lastNameField.getText(), 
+						emailField.getText(), passwordField.getText(), shippingAddressField.getText(),
+						phoneField.getText()));
+			}
+		});
+	}
+	
+	public void setListener(Listener listener) {
+		this.listener = listener;
 	}
 	
 	private static final long serialVersionUID = 7298764152390830707L;

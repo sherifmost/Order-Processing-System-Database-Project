@@ -17,7 +17,7 @@ public class LoginPanel extends JPanel {
 	private JTextField usernameTextField;
 	private JPasswordField passwordField;
 	private JButton loginButton, signUpButton;
-	private SwitchListener switchListener;
+	private Listener listener;
 	
 	public JButton getSignUpButton() {
 		return signUpButton;
@@ -63,13 +63,13 @@ public class LoginPanel extends JPanel {
 		signUpButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				switchListener.switchEventOccurred(new SwitchEvent(this, "signup"));
+				listener.eventOccurred(new SwitchEvent(this, "signup"));
 			}
 		});
 	}
 	
-	public void setSwitchListener(SwitchListener switchListener) {
-		this.switchListener = switchListener;
+	public void setListener(Listener listener) {
+		this.listener = listener;
 	}
 	
 	private static final long serialVersionUID = 20;

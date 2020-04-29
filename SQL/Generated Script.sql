@@ -85,7 +85,7 @@ ENGINE = InnoDB;
 -- Table `BOOKSTORE`.`USER`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `BOOKSTORE`.`USER` (
-  `UserName` INT NOT NULL,
+  `UserName` VARCHAR(45) NOT NULL,
   `Password` VARCHAR(300) NOT NULL,
   `PasswordHash` VARCHAR(45) NOT NULL,
   `Fname` VARCHAR(30) NOT NULL,
