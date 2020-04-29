@@ -15,6 +15,7 @@ public class MainFrame extends JFrame {
 		super("Bookstore");
 		controller = new Controller();
 		loginPanel = new LoginPanel();
+		controller.createConnection();
 		setLayout(new BorderLayout());
 		setSize(600, 600);
 		setMinimumSize(new Dimension(400, 400));
