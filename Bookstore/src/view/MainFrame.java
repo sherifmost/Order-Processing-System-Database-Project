@@ -33,7 +33,14 @@ public class MainFrame extends JFrame {
 				controller.registerUser(e);
 			}
 		});
-		controller.createConnection();
+		
+		loginPanel.setListener(new Listener() {
+			@Override
+			public void eventOccurred(LoginEvent e) {
+				controller.logIn(e);
+			}
+		});
+		controller.connectToDB();
 		setLayout(new BorderLayout());
 		setSize(600, 600);
 		setMinimumSize(new Dimension(400, 400));

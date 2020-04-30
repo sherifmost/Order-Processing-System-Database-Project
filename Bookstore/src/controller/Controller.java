@@ -4,37 +4,31 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import model.Database;
+import model.User;
+import view.LoginEvent;
 import view.SignUpEvent;
 
 public class Controller {
+	Database db = new Database();
+	User user = new User();
 	
-	private Connection connection;
-	
-	public void createConnection() {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			String url = "jdbc:mysql://localhost:3306/BOOKSTORE";
-			connection = DriverManager.getConnection(url, "root", "password");
-			System.out.println("Connected with DB!");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		}
-	}
-	
-	public void disconnect() {
-		if (connection != null) {
-			try {
-				connection.close();
-				System.out.println("Disconnected");
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+	public void connectToDB() {
+		db.createConnection();
 	}
 	
 	public void registerUser(SignUpEvent e) {
-		
+		user.setUserName(e.getUsername());
+		user.setFirstName(e.getFirstName());
+		user.setLastName(e.getLastName());
+		user.setEmail(e.getEmail());
+		user.setPassword(e.getPassword());
+		user.setShippingAddress(e.getShippingAddress());
+		user.setPhone(e.getPhone());
+		db.signUpNewUser(user);
+	}
+	
+	public void logIn(LoginEvent e) {
+		db.signIn(e.getUsername(), e.getPassword());
 	}
 }

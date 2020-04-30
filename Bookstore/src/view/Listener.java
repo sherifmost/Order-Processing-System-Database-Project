@@ -9,4 +9,7 @@ public abstract class Listener implements EventListener {
 	public void eventOccurred(SignUpEvent e) {
 		
 	}
+	public void eventOccurred(LoginEvent e) {
+		
+	}
 }
