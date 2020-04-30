@@ -8,7 +8,11 @@ public class User {
 	private String password;
 	private String shippingAddress;
 	private String phone;
-/*	
+	
+	public User() {
+		
+	}
+	
 	public User(String userName, String firstName, String lastName, String email,
 			String password, String shippingAddress, String phone) {
 		this.setUserName(userName);
@@ -20,7 +24,6 @@ public class User {
 		this.phone = phone;
 		
 	}
-	*/
 
 	public String getPassword() {
 		return password;
