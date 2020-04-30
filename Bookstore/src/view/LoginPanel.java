@@ -63,7 +63,7 @@ public class LoginPanel extends JPanel {
 		signUpButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				listener.eventOccurred(new SwitchEvent(this, "signup"));
+				listener.eventOccurred(new SwitchEvent(this));
 			}
 		});
 		
