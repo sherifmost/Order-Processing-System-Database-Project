@@ -12,7 +12,12 @@ public class Book {
 	private Category category;
 	private int threshold;
 	private int copies;
-	//Constructor
+
+	// Constructor
+	public Book() {
+
+	}
+
 	public Book(int ISBN, String title, String publisherName, int publicationYear, int price, Category category,
 			int threshold, int copies) {
 		setISBN(ISBN);
@@ -24,7 +29,8 @@ public class Book {
 		setThreshold(threshold);
 		setCopies(copies);
 	}
-	//getters and setters
+
+	// getters and setters
 	public int getISBN() {
 		return ISBN;
 	}

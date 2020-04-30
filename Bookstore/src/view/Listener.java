@@ -12,4 +12,7 @@ public abstract class Listener implements EventListener {
 	public void eventOccurred(LoginEvent e) {
 		
 	}
+	public void eventOccurred(PublisherEvent e) {
+		
+	}
 }

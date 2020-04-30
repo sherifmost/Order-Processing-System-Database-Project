@@ -7,6 +7,10 @@ public class Author {
 	private String lname;
 
 	// constructor
+	public Author() {
+
+	}
+
 	public Author(int ISBN, String fname, String lname) {
 		setFname(fname);
 		setISBN(ISBN);

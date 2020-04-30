@@ -1,13 +1,17 @@
 package model;
 
-public class Pubisher {
+public class Publisher {
 	// Data corresponding to the relation
 	private String publisherName;
 	private String telephone;
 	private String address;
 
 	// constructor
-	public Pubisher(String publisherName, String telephone, String address) {
+	public Publisher() {
+
+	}
+
+	public Publisher(String publisherName, String telephone, String address) {
 		setAddress(address);
 		setPublisherName(publisherName);
 		setTelephone(telephone);
