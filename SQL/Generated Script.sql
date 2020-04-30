@@ -34,13 +34,13 @@ CREATE TABLE IF NOT EXISTS `BOOKSTORE`.`BOOK` (
   `PublisherName` VARCHAR(45) NOT NULL,
   `PublicationYear` YEAR NULL,
   `Price` INT UNSIGNED NOT NULL,
-  `Category` VARCHAR(10) NOT NULL,
+  `Category` ENUM('Science', 'Art', 'Religion', 'History', 'Geography') NOT NULL,
   `Threshold` INT UNSIGNED NOT NULL,
-  `Copies` INT UNSIGNED NOT NULL,
+  `Copies` INT NOT NULL,
   PRIMARY KEY (`ISBN`),
-  UNIQUE INDEX `Title_UNIQUE` (`Title` ASC) VISIBLE,
-  INDEX `BOOK_TO_PUBLISHER_idx` (`PublisherName` ASC) INVISIBLE,
-  INDEX `CATEGORY_INDEX` USING BTREE (`Category`) VISIBLE,
+  UNIQUE INDEX `Title_UNIQUE` (`Title` ASC),
+  INDEX `BOOK_TO_PUBLISHER_idx` (`PublisherName` ASC),
+  INDEX `CATEGORY_INDEX` USING BTREE (`Category`),
   CONSTRAINT `BOOK_TO_PUBLISHER`
     FOREIGN KEY (`PublisherName`)
     REFERENCES `BOOKSTORE`.`PUBLISHER` (`PublisherName`)
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `BOOKSTORE`.`BOOK_AUTHOR` (
   `Fname` VARCHAR(30) NOT NULL,
   `Lname` VARCHAR(30) NOT NULL,
   PRIMARY KEY (`ISBN`, `Fname`, `Lname`),
-  INDEX `FNAME_INDEX` USING BTREE (`Fname`) VISIBLE,
+  INDEX `FNAME_INDEX` USING BTREE (`Fname`),
   CONSTRAINT `AUTHOR_TO_BOOK`
     FOREIGN KEY (`ISBN`)
     REFERENCES `BOOKSTORE`.`BOOK` (`ISBN`)
@@ -86,8 +86,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `BOOKSTORE`.`USER` (
   `UserName` VARCHAR(45) NOT NULL,
-  `Password` VARCHAR(300) NOT NULL,
-  `PasswordHash` VARCHAR(45) NOT NULL,
+  `PasswordHash` VARCHAR(64) NOT NULL,
   `Fname` VARCHAR(30) NOT NULL,
   `Lname` VARCHAR(30) NOT NULL,
   `Email` VARCHAR(45) NOT NULL,
@@ -95,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `BOOKSTORE`.`USER` (
   `ShippingAddress` VARCHAR(150) NOT NULL,
   `IsManager` TINYINT NOT NULL,
   PRIMARY KEY (`UserName`),
-  UNIQUE INDEX `Email_UNIQUE` (`Email` ASC) VISIBLE)
+  UNIQUE INDEX `Email_UNIQUE` (`Email` ASC) )
 ENGINE = InnoDB;
 
 

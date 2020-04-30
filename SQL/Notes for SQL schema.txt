@@ -19,7 +19,7 @@ PublicationYear: type year [takes a year from 1901 to 2150] can be null????
 Price: type int not null unsigned.
 Category: type varchar(10) not null [I combined it with the category table in an attribute here as category relation only has one attribute, also to limit only the choices in the pdf I think we should restrict the GUI input].
 Threshold: type int not null unsigned.
-Copies: type int not null unsigned.
+Copies: type int not null
 -----------------------------------------------------------------
 BOOK_AUTHOR:
 --This table is added beaucouse the book can have more than one author.
@@ -44,8 +44,8 @@ TotalOrdered: type int unsigned not null.
 USER:
 --We will keep a boolean to indicate whether he is a manager or not.
 UserName: type varchar(45) not null primary key.
-Password: type varchar(300) not null [Large size is to allow for encryption outputs(SHA256)].
-PasswordHash: type varchar(45) not null [to aid in the hashing discussed, could be dropped if not needed].
+[Large size is to allow for encryption outputs(SHA256)].
+PasswordHash: type varchar(64) not null.
 Fname: type varchar(30) not null.
 Lname: type varchar(30) not null.
 Email: type varchar(45) not null unique.
