@@ -9,7 +9,6 @@ import java.sql.Statement;
 
 public class Database {
 	private Connection connection;
-	private PasswordHashing passwordHashing;
 	
 	public void createConnection() {
 		try {
@@ -43,12 +42,10 @@ public class Database {
 		}
 		try {
 			Statement statement = connection.createStatement();
-			passwordHashing = new PasswordHashing();
 			String hashedPassword = "";
 			try {
-				hashedPassword = passwordHashing.getSHA(user.getPassword());
+				hashedPassword = PasswordHashing.getSHA(user.getPassword());
 			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			String operation = "INSERT INTO USER VALUES('" + user.getUserName() + "', '" + user.getPassword() + "', '" +
@@ -62,10 +59,9 @@ public class Database {
 	}
 	
 	public void signIn(String username, String password) {
-		passwordHashing = new PasswordHashing();
 		String hashedPassword = "";
 		try {
-			hashedPassword = passwordHashing.getSHA(password);
+			hashedPassword = PasswordHashing.getSHA(password);
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}

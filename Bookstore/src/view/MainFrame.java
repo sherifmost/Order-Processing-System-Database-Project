@@ -26,18 +26,15 @@ public class MainFrame extends JFrame {
 					uniqueInstance.add(signUpPanel);
 				}
 			}
+			@Override
+			public void eventOccurred(LoginEvent e) {
+				controller.logIn(e);
+			}
 		});
 		signUpPanel.setListener(new Listener() {
 			@Override
 			public void eventOccurred(SignUpEvent e) {
 				controller.registerUser(e);
-			}
-		});
-		
-		loginPanel.setListener(new Listener() {
-			@Override
-			public void eventOccurred(LoginEvent e) {
-				controller.logIn(e);
 			}
 		});
 		controller.connectToDB();

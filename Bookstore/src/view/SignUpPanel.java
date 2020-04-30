@@ -112,8 +112,8 @@ public class SignUpPanel extends JPanel {
 			public void actionPerformed(ActionEvent event) {
 				listener.eventOccurred(new SignUpEvent(this, usernameField.getText(),
 						firstNameField.getText(), lastNameField.getText(), 
-						emailField.getText(), passwordField.getText(), shippingAddressField.getText(),
-						phoneField.getText()));
+						emailField.getText(), new String(passwordField.getPassword()),
+						shippingAddressField.getText(), phoneField.getText()));
 			}
 		});
 	}
