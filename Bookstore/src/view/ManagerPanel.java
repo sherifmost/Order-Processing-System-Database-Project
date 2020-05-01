@@ -3,6 +3,8 @@ package view;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -12,6 +14,8 @@ public class ManagerPanel extends JPanel {
 	private static final long serialVersionUID = -1715362469751215553L;
 	private JButton addBookBtn, modifyBookBtn, placeOrderBtn, confirmOrderBtn,
 	promoteUsersBtn, viewReportsBtn;
+	private Listener listener;
+	
 	public ManagerPanel() {
 		addBookBtn = new JButton("Add new books");
 		modifyBookBtn = new JButton("Modify existing books");
@@ -50,5 +54,39 @@ public class ManagerPanel extends JPanel {
 		gc.gridy = 5;
 		add(viewReportsBtn, gc);
 		this.setBackground(java.awt.Color.BLACK);
+		addBookBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				listener.eventOccured(e);
+			}
+		});
+	}
+	
+	public JButton getAddBookBtn() {
+		return addBookBtn;
+	}
+
+	public JButton getModifyBookBtn() {
+		return modifyBookBtn;
+	}
+
+	public JButton getPlaceOrderBtn() {
+		return placeOrderBtn;
+	}
+
+	public JButton getConfirmOrderBtn() {
+		return confirmOrderBtn;
+	}
+
+	public JButton getPromoteUsersBtn() {
+		return promoteUsersBtn;
+	}
+
+	public JButton getViewReportsBtn() {
+		return viewReportsBtn;
+	}
+
+	void setListener(Listener listener) {
+		this.listener = listener;
 	}
 }

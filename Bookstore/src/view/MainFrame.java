@@ -2,6 +2,7 @@ package view;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.util.EventObject;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -15,6 +16,7 @@ public class MainFrame extends JFrame {
 	private SignUpPanel signUpPanel;
 	private ManagerPanel managerPanel;
 	private PublisherPanel publisherPanel;
+	private NewBookPanel newBookPanel;
 	private static MainFrame uniqueInstance;
 	private static JPanel cards;
 
@@ -25,6 +27,7 @@ public class MainFrame extends JFrame {
 		signUpPanel = new SignUpPanel();
 		managerPanel = new ManagerPanel();
 		publisherPanel = new PublisherPanel();
+		newBookPanel = new NewBookPanel();
 		cards = new JPanel(new CardLayout());
 		loginPanel.setListener(new Listener() {
 			@Override
@@ -56,6 +59,23 @@ public class MainFrame extends JFrame {
 			}
 		});
 
+		managerPanel.setListener(new Listener() {
+			@Override
+			public void eventOccured(EventObject e) {
+				if (e.getSource() == managerPanel.getAddBookBtn()) {
+					CardLayout cl = (CardLayout) cards.getLayout();
+					cl.show(cards, "NEWBOOK");
+				}
+			}
+		});
+		newBookPanel.setListener(new Listener() {
+			@Override
+			public void eventOccured(EventObject e) {
+				if (e.getSource() == newBookPanel.getAddBookBtn()) {
+					
+				}
+			}
+		});
 		controller.connectToDB();
 		setSize(600, 600);
 		setMinimumSize(new Dimension(400, 400));
@@ -65,7 +85,8 @@ public class MainFrame extends JFrame {
 		cards.add(signUpPanel, "SIGNUP");
 		cards.add(managerPanel, "MANAGER");
 		cards.add(publisherPanel, "PUBLISHER");
-		this.add(cards);
+		cards.add(newBookPanel, "NEWBOOK");
+		this.add(cards);		
 	}
 
 	public static synchronized MainFrame getInstance() {
