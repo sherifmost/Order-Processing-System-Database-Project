@@ -12,19 +12,23 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class NewBookPanel extends JPanel {
 	private JLabel bookISBNLabel, bookTitleLabel,
 		publisherNameLabel, publicationYearLabel, priceLabel,
-		thresholdLabel, numberOfCopiesLabel, categoryLabel, newBookLabel;
+		thresholdLabel, numberOfCopiesLabel, categoryLabel,
+		authorsLabel, newBookLabel;
 	private JTextField bookISBNField, bookTitleField,
 		publisherNameField, priceField, thresholdField,
-		numberOfCopiesField;
+		numberOfCopiesField, authorField;
+	private JTextArea authors;
 	private JRadioButton scienceBtn, artBtn, religionBtn, historyBtn, geographyBtn;
 	private ButtonGroup categoryGroup;
 	private JComboBox<?> yearComboBox;
-	private JButton addBookBtn;
+	private JButton addBookBtn, addAuthorBtn;
 	private Listener listener;
 	
 	public NewBookPanel() {
@@ -35,6 +39,7 @@ public class NewBookPanel extends JPanel {
 		publicationYearLabel = new JLabel("Publication year");
 		priceLabel = new JLabel("Price");
 		thresholdLabel = new JLabel("Threshold");
+		authorsLabel = new JLabel("Author(s)");
 		numberOfCopiesLabel = new JLabel("Number of copies");
 		categoryLabel = new JLabel("Category");
 		bookISBNField = new JTextField(15);
@@ -43,6 +48,7 @@ public class NewBookPanel extends JPanel {
 		priceField = new JTextField(15);
 		thresholdField = new JTextField(15);
 		numberOfCopiesField = new JTextField(15);
+		authorField = new JTextField(15);
 		scienceBtn = new JRadioButton("Science");
 		artBtn = new JRadioButton("Art");
 		religionBtn = new JRadioButton("Religion");
@@ -55,6 +61,9 @@ public class NewBookPanel extends JPanel {
 		categoryGroup.add(historyBtn);
 		categoryGroup.add(geographyBtn);
 		addBookBtn = new JButton("Add Book!");
+		addAuthorBtn = new JButton("Add author");
+		authors = new JTextArea(3, 15);
+		authors.setEditable(false);
 		String[] boxOptions = new String[100];
 		for (int i = 0, year = 1921; year <= 2020; year++, i++) {
 			boxOptions[i] = "" + year;
@@ -132,6 +141,20 @@ public class NewBookPanel extends JPanel {
 		gc.gridx = 2;
 		add(geographyBtn, gc);
 		gc.gridy = 10;
+		gc.gridx = 0;
+		add(authorsLabel, gc);
+		gc.gridy = 10;
+		gc.gridx = 1;
+		add(authorField, gc);
+		gc.gridy = 10;
+		gc.gridx = 2;
+		add(addAuthorBtn, gc);
+		gc.gridy = 11;
+		gc.gridx = 1;
+		gc.gridwidth = 1;
+		gc.gridheight = 3;
+		add(new JScrollPane(authors), gc);
+		gc.gridy = 14;
 		gc.gridx = 1;
 		gc.gridwidth = 2;
 		gc.ipady = 30;
@@ -141,6 +164,14 @@ public class NewBookPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				listener.eventOccured(e);
+			}
+		});
+		addAuthorBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				authors.setEditable(true);
+				authors.append(authorField.getText() + "\n");
+				authors.setEditable(false);
 			}
 		});
 		this.setBackground(java.awt.Color.CYAN);
