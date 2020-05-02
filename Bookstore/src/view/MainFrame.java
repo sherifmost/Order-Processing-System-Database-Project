@@ -17,8 +17,12 @@ public class MainFrame extends JFrame {
 	private ManagerPanel managerPanel;
 	private PublisherPanel publisherPanel;
 	private NewBookPanel newBookPanel;
+	private UserPanel userPanel;
+	private EditInfoPanel infoPanel;
 	private static MainFrame uniqueInstance;
 	private static JPanel cards;
+	// constants
+	private String editInfoName = "EDITUSERINFO";
 
 	private MainFrame() {
 		super("Bookstore");
@@ -28,6 +32,7 @@ public class MainFrame extends JFrame {
 		managerPanel = new ManagerPanel();
 		publisherPanel = new PublisherPanel();
 		newBookPanel = new NewBookPanel();
+		userPanel = new UserPanel();
 		cards = new JPanel(new CardLayout());
 		loginPanel.setListener(new Listener() {
 			@Override
@@ -40,7 +45,7 @@ public class MainFrame extends JFrame {
 			public void eventOccurred(LoginEvent e) {
 				controller.logIn(e);
 				CardLayout cl = (CardLayout) cards.getLayout();
-				cl.show(cards, "MANAGER");
+				cl.show(cards, "USER");
 			}
 		});
 		signUpPanel.setListener(new Listener() {
@@ -72,10 +77,32 @@ public class MainFrame extends JFrame {
 			@Override
 			public void eventOccured(EventObject e) {
 				if (e.getSource() == newBookPanel.getAddBookBtn()) {
-					
+
 				}
 			}
 		});
+		userPanel.setListener(new Listener() {
+			@Override
+			public void eventOccured(EventObject e) {
+				if (e.getSource() == userPanel.getEditInfoBtn()) {
+					initializeUserInfo();
+					CardLayout cl = (CardLayout) cards.getLayout();
+					cl.show(cards, editInfoName);
+				} else if (e.getSource() == userPanel.getSearchForBookBtn()) {
+
+				} else if (e.getSource() == userPanel.getAddToCartBtn()) {
+
+				} else if (e.getSource() == userPanel.getManageCartBtn()) {
+
+				} else if (e.getSource() == userPanel.getCheckOutCartBtn()) {
+
+				} else if (e.getSource() == userPanel.getLogOutBtn()) {
+					CardLayout cl = (CardLayout) cards.getLayout();
+					cl.show(cards, "LOGIN");
+				}
+			}
+		});
+
 		controller.connectToDB();
 		setSize(600, 600);
 		setMinimumSize(new Dimension(400, 400));
@@ -86,7 +113,25 @@ public class MainFrame extends JFrame {
 		cards.add(managerPanel, "MANAGER");
 		cards.add(publisherPanel, "PUBLISHER");
 		cards.add(newBookPanel, "NEWBOOK");
-		this.add(cards);		
+		cards.add(userPanel, "USER");
+		this.add(cards);
+	}
+
+	private void initializeUserInfo() {
+		infoPanel = new EditInfoPanel();
+		infoPanel.setListener(new Listener() {
+			@Override
+			public void eventOccurred(UpdateDataEvent e) {
+				if (!controller.updateUserData(e)) {
+					infoPanel.getErrorLabel().setText("Email or username already used.");
+				} else {
+					CardLayout cl = (CardLayout) cards.getLayout();
+					cl.show(cards, "USER");
+				}
+			}
+		});
+		cards.add(infoPanel, editInfoName);
+
 	}
 
 	public static synchronized MainFrame getInstance() {

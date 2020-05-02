@@ -8,13 +8,14 @@ public class User {
 	private String password;
 	private String shippingAddress;
 	private String phone;
-	
+	private boolean isManager;
+
 	public User() {
-		
+
 	}
-	
-	public User(String userName, String firstName, String lastName, String email,
-			String password, String shippingAddress, String phone) {
+
+	public User(String userName, String firstName, String lastName, String email, String password,
+			String shippingAddress, String phone) {
 		this.setUserName(userName);
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -22,7 +23,19 @@ public class User {
 		this.password = password;
 		this.shippingAddress = shippingAddress;
 		this.phone = phone;
-		
+
+	}
+
+	public User(String userName, String firstName, String lastName, String email, String password,
+			String shippingAddress, String phone, boolean isManager) {
+		this.setUserName(userName);
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.password = password;
+		this.shippingAddress = shippingAddress;
+		this.phone = phone;
+		this.isManager = isManager;
 	}
 
 	public String getPassword() {
@@ -80,5 +93,13 @@ public class User {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	
+
+	public boolean isManager() {
+		return isManager;
+	}
+
+	public void setManager(boolean isManager) {
+		this.isManager = isManager;
+	}
+
 }

@@ -6,6 +6,7 @@ import model.User;
 import view.LoginEvent;
 import view.PublisherEvent;
 import view.SignUpEvent;
+import view.UpdateDataEvent;
 
 public class Controller {
 	Database db = new Database();
@@ -36,5 +37,9 @@ public class Controller {
 
 	public void logIn(LoginEvent e) {
 		db.signIn(e.getUsername(), e.getPassword());
+	}
+
+	public boolean updateUserData(UpdateDataEvent e) {
+		return db.updateUser(e);
 	}
 }
