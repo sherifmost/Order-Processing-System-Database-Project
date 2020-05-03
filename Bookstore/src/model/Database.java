@@ -198,7 +198,6 @@ public class Database {
 				} catch (NoSuchAlgorithmException exception) {
 					exception.printStackTrace();
 				}
-				System.out.println(phone);
 				String operation = "UPDATE USER SET " + "userName = '" + userName + "', " + "passwordHash = '"
 						+ hashedPassword + "', " + "Fname = '" + firstaName + "', " + "Lname = '" + lastName + "', "
 						+ "Email = '" + email + "', " + "Phone = '" + phone + "', " + "shippingAddress = '"
