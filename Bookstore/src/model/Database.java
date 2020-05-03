@@ -52,18 +52,29 @@ public class Database {
 			} catch (NoSuchAlgorithmException e) {
 				e.printStackTrace();
 			}
+			String manager = user.isManager() ? "'1'" : "'0'";
 			String operation = "INSERT INTO USER VALUES('" + user.getUserName() + "', '" + hashedPassword + "', '"
 					+ user.getFirstName() + "', '" + user.getLastName() + "', '" + user.getEmail() + "', '"
-					+ user.getPhone() + "', '" + user.getShippingAddress() + "', '0')";
+					+ user.getPhone() + "', '" + user.getShippingAddress() + "'," + manager + ")";
 			statement.execute(operation);
 			statement.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
+	
+	public void signUpSuperUser() {
+		User sudo = new User("root", "root", "root", "root@alexu.edu.eg",
+				"password", "FOE - Shatby", "07775000");
+		sudo.setManager();
+		if (!isDuplicateUser(sudo.getUserName(), sudo.getEmail())) {
+			signUpNewUser(sudo);
+		}
+	}
 
-	public void signIn(String username, String password) {
+	public String signIn(String username, String password, boolean isManager) {
 		String hashedPassword = "";
+		String errorMsg = "NoError";
 		try {
 			hashedPassword = PasswordHashing.getSHA(password);
 		} catch (NoSuchAlgorithmException e) {
@@ -76,21 +87,20 @@ public class Database {
 			ResultSet rs = statement.executeQuery("SELECT * FROM USER where username = '" + username + "'");
 			if (rs.next()) {
 				String tempPass = rs.getString("passwordHash");
-				if (tempPass.compareTo(hashedPassword) == 0) {
-					System.out.println("welcome " + username + " !");
-					fillInUser(username, rs.getString("Fname"), rs.getString("Lname"), rs.getString("Email"), password,
-							rs.getString("ShippingAddress"), rs.getString("Phone"), rs.getBoolean("IsManager"));
-					System.out.println(loggedInUser.getEmail());
-				} else {
-					System.out.println("wrong password! Try again.");
+				if (tempPass.compareTo(hashedPassword) != 0) {
+					return "wrong password! Try again.";
+				}
+				boolean storedAsManager = rs.getBoolean("IsManager");
+				if (isManager && !storedAsManager) {
+					return "You are not a manager!";
 				}
 			} else {
-				System.out.println("This Username is not registered!");
+				return "This Username is not registered!";
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			return e.getLocalizedMessage();
 		}
-
+		return errorMsg;
 	}
 
 	private boolean isDuplicateUser(String userName, String email) {
@@ -213,10 +223,23 @@ public class Database {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 		return isDuplicate;
 	}
-
+	
+	public void addNewBook(Book book) {
+		try {
+			Statement statement = connection.createStatement();
+			String operation = "INSERT INTO BOOK VALUES('" + book.getISBN() + "', '"
+					+ book.getTitle() + "', '" + book.getPublisherName() + "', '" +
+					book.getPublicationYear() + "', '" + book.getPrice() + "', '" + 
+					book.getCategory() + "', '" + book.getThreshold() + "', '" +
+					book.getCopies() + "')";
+			statement.execute(operation);
+			statement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	private boolean userNameExists(String userName) {
 		boolean isDuplicate = false;
 		try {
@@ -237,7 +260,6 @@ public class Database {
 
 		return isDuplicate;
 	}
-
 	// Function to fill in the logged in user data
 	private void fillInUser(String userName, String firstName, String lastName, String email, String password,
 			String shippingAddress, String phone, boolean isManager) {
@@ -250,5 +272,53 @@ public class Database {
 
 	public static void setLoggedInUser(User loggedInUser) {
 		Database.loggedInUser = loggedInUser;
+	}
+	
+	public void searchBooks(SearchQuery searchQuery) {
+		try {
+			Statement statement = connection.createStatement();
+			StringBuilder sb = new StringBuilder();
+			String mainOperation, publisherFilter, lowerPriceFilter, upperPriceFilter, fromYearFilter, toYearFilter;
+			mainOperation = "SELECT * FROM BOOK WHERE TITLE LIKE '%" + searchQuery.getBookTitle() + "%'" 
+					+ " AND CATEGORY = '" + searchQuery.getCategory() + "'";
+			publisherFilter = " AND PUBLISHERNAME LIKE '%" + searchQuery.getPublisherName() + "%'";
+			lowerPriceFilter = " AND PRICE >= '" + searchQuery.getLowerPrice() + "'";
+			upperPriceFilter = "AND PRICE <= '" + searchQuery.getUpperPrice() + "'";
+			fromYearFilter = " AND PUBLICATIONYEAR >= '" + searchQuery.getFromYear() + "'";
+			toYearFilter = " AND PUBLICATIONYEAR <= '" + searchQuery.getToYear() + "'";
+			sb.append(mainOperation);
+			if (searchQuery.getPublisherName().compareTo("none") != 0) {
+				sb.append(publisherFilter);
+			}
+			if (searchQuery.getLowerPrice() != 0) {
+				sb.append(lowerPriceFilter);
+			}
+			if (searchQuery.getUpperPrice() != 999999) {
+				sb.append(upperPriceFilter);
+			}
+			if (searchQuery.getFromYear() != 1921) {
+				sb.append(fromYearFilter);
+			}
+			if (searchQuery.getToYear() != 2020) {
+				sb.append(toYearFilter);
+			}
+					
+			ResultSet rs = statement.executeQuery(sb.toString());
+			while (rs.next()) {
+				System.out.println();
+				System.out.print(rs.getString("ISBN") + "  ");
+				System.out.print(rs.getString("title") + "  ");
+				System.out.print(rs.getString("publisherName") + "  ");
+				System.out.print(rs.getString("publicationYear") + "  ");
+				System.out.print(rs.getString("price") + "  ");
+				// next steps:
+				// show results in a table 
+				// add an option to the user for book selection
+				}
+				statement.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+				
 	}
 }
