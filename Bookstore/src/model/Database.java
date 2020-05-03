@@ -49,17 +49,27 @@ public class Database {
 			} catch (NoSuchAlgorithmException e) {
 				e.printStackTrace();
 			}
-			String operation = "INSERT INTO USER VALUES('" + user.getUserName() + "', '"
-					+ hashedPassword + "', '" + user.getFirstName() + "', '" + user.getLastName() + "', '"
-					+ user.getEmail() + "', '" + user.getPhone() + "', '" + user.getShippingAddress() + "', '0')";
+			String manager = user.isManager() ? "'1'" : "'0'";
+			String operation = "INSERT INTO USER VALUES('" + user.getUserName() + "', '" + hashedPassword + "', '"
+					+ user.getFirstName() + "', '" + user.getLastName() + "', '" + user.getEmail() + "', '"
+					+ user.getPhone() + "', '" + user.getShippingAddress() + "'," + manager + ")";
 			statement.execute(operation);
 			statement.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
+	
+	public void signUpSuperUser() {
+		User sudo = new User("root", "root", "root", "root@alexu.edu.eg",
+				"password", "FOE - Shatby", "07775000");
+		sudo.setManager();
+		if (!isDuplicateUser(sudo.getUserName(), sudo.getEmail())) {
+			signUpNewUser(sudo);
+		}
+	}
 
-	public String signIn(String username, String password) {
+	public String signIn(String username, String password, boolean isManager) {
 		String hashedPassword = "";
 		String errorMsg = "NoError";
 		try {
@@ -70,13 +80,17 @@ public class Database {
 
 		try {
 			Statement statement = connection.createStatement();
-			ResultSet rs = statement.executeQuery("SELECT passwordHash FROM USER where username = '" + username + "'");
+			ResultSet rs = statement.executeQuery("SELECT passwordHash, IsManager FROM USER where username = '" + username + "'");
 			if (rs.next()) {
 				String tempPass = rs.getString("passwordHash");
 				if (tempPass.compareTo(hashedPassword) == 0) {
-					System.out.println("welcome " + username + " !");
+					
 				} else {
 					return "wrong password! Try again.";
+				}
+				boolean storedAsManager = rs.getBoolean("IsManager");
+				if (isManager && !storedAsManager) {
+					return "You are not a manager!";
 				}
 			} else {
 				return "This Username is not registered!";
@@ -213,4 +227,5 @@ public class Database {
 		}
 		
 	}
+	
 }

@@ -26,6 +26,7 @@ public class Controller {
 
 	public void connectToDB() {
 		db.createConnection();
+		db.signUpSuperUser();
 	}
 
 	public void registerUser(SignUpEvent e) {
@@ -59,7 +60,7 @@ public class Controller {
 	}
 
 	public String logIn(LoginEvent e) {
-		return db.signIn(e.getUsername(), e.getPassword());
+		return db.signIn(e.getUsername(), e.getPassword(), e.isManager());
 	}
 	
 	public void search(SearchEvent e) {

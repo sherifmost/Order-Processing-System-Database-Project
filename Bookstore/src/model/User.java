@@ -8,6 +8,7 @@ public class User {
 	private String password;
 	private String shippingAddress;
 	private String phone;
+	private boolean manager;
 	
 	public User() {
 		
@@ -22,7 +23,7 @@ public class User {
 		this.password = password;
 		this.shippingAddress = shippingAddress;
 		this.phone = phone;
-		
+		this.manager = false;
 	}
 
 	public String getPassword() {
@@ -79,6 +80,14 @@ public class User {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+	
+	public void setManager() {
+		this.manager = true;
+	}
+	
+	public boolean isManager() {
+		return manager;
 	}
 	
 }
