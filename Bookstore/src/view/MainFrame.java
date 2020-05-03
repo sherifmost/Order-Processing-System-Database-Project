@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.util.EventObject;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import controller.Controller;
@@ -38,9 +39,14 @@ public class MainFrame extends JFrame {
 
 			@Override
 			public void eventOccurred(LoginEvent e) {
-				controller.logIn(e);
-				CardLayout cl = (CardLayout) cards.getLayout();
-				cl.show(cards, "MANAGER");
+				String errorMsg = controller.logIn(e);
+				if (errorMsg.equals("NoError")) {
+					CardLayout cl = (CardLayout) cards.getLayout();
+					cl.show(cards, "MANAGER");
+				} else {
+					JOptionPane.showMessageDialog(MainFrame.getInstance(), errorMsg, "Invalid input",
+							JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		signUpPanel.setListener(new Listener() {
@@ -55,7 +61,8 @@ public class MainFrame extends JFrame {
 			@Override
 			public void eventOccurred(PublisherEvent e) {
 				controller.addPublisher(e);
-				// todo: Add here the book creation panel
+				CardLayout cl = (CardLayout) cards.getLayout();
+				cl.show(cards, "NEWBOOK");
 			}
 		});
 
@@ -71,14 +78,19 @@ public class MainFrame extends JFrame {
 		newBookPanel.setListener(new Listener() {
 			@Override
 			public void eventOccured(EventObject e) {
-				if (e.getSource() == newBookPanel.getAddBookBtn()) {
-					
+				if (e.getSource() == newBookPanel.getAddPublisherBtn()) {
+					CardLayout cl = (CardLayout) cards.getLayout();
+					cl.show(cards, "PUBLISHER");
 				}
+			}
+			
+			@Override
+			public void eventOccured(BookEvent e) {
+				controller.addBook(e);
 			}
 		});
 		controller.connectToDB();
-		setSize(600, 600);
-		setMinimumSize(new Dimension(400, 400));
+		setMinimumSize(new Dimension(1000, 700));
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		cards.add(loginPanel, "LOGIN");
@@ -86,7 +98,7 @@ public class MainFrame extends JFrame {
 		cards.add(managerPanel, "MANAGER");
 		cards.add(publisherPanel, "PUBLISHER");
 		cards.add(newBookPanel, "NEWBOOK");
-		this.add(cards);		
+		this.add(cards);	
 	}
 
 	public static synchronized MainFrame getInstance() {

@@ -19,4 +19,7 @@ public abstract class Listener implements EventListener {
 	public void eventOccured(EventObject e) {
 		
 	}
+	public void eventOccured(BookEvent e) {
+		
+	}
 }

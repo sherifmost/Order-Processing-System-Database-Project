@@ -59,8 +59,9 @@ public class Database {
 		}
 	}
 
-	public void signIn(String username, String password) {
+	public String signIn(String username, String password) {
 		String hashedPassword = "";
+		String errorMsg = "NoError";
 		try {
 			hashedPassword = PasswordHashing.getSHA(password);
 		} catch (NoSuchAlgorithmException e) {
@@ -75,15 +76,15 @@ public class Database {
 				if (tempPass.compareTo(hashedPassword) == 0) {
 					System.out.println("welcome " + username + " !");
 				} else {
-					System.out.println("wrong password! Try again.");
+					return "wrong password! Try again.";
 				}
 			} else {
-				System.out.println("This Username is not registered!");
+				return "This Username is not registered!";
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			return e.getLocalizedMessage();
 		}
-
+		return errorMsg;
 	}
 
 	private boolean isDuplicateUser(String userName, String email) {
@@ -148,5 +149,20 @@ public class Database {
 		}
 
 		return isDuplicate;
+	}
+	
+	public void addNewBook(Book book) {
+		try {
+			Statement statement = connection.createStatement();
+			String operation = "INSERT INTO BOOK VALUES('" + book.getISBN() + "', '"
+					+ book.getTitle() + "', '" + book.getPublisherName() + "', '" +
+					book.getPublicationYear() + "', '" + book.getPrice() + "', '" + 
+					book.getCategory() + "', '" + book.getThreshold() + "', '" +
+					book.getCopies() + "')";
+			statement.execute(operation);
+			statement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

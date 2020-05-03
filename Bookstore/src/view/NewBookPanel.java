@@ -5,16 +5,21 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Enumeration;
 
+import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import utils.Category;
 
 public class NewBookPanel extends JPanel {
 	private JLabel bookISBNLabel, bookTitleLabel,
@@ -27,8 +32,8 @@ public class NewBookPanel extends JPanel {
 	private JTextArea authors;
 	private JRadioButton scienceBtn, artBtn, religionBtn, historyBtn, geographyBtn;
 	private ButtonGroup categoryGroup;
-	private JComboBox<?> yearComboBox;
-	private JButton addBookBtn, addAuthorBtn;
+	private JComboBox<String> yearComboBox;
+	private JButton addBookBtn, addAuthorBtn, addPublisherBtn;
 	private Listener listener;
 	
 	public NewBookPanel() {
@@ -60,8 +65,10 @@ public class NewBookPanel extends JPanel {
 		categoryGroup.add(religionBtn);
 		categoryGroup.add(historyBtn);
 		categoryGroup.add(geographyBtn);
+		scienceBtn.setSelected(true);
 		addBookBtn = new JButton("Add Book!");
 		addAuthorBtn = new JButton("Add author");
+		addPublisherBtn = new JButton("Add publisher");
 		authors = new JTextArea(3, 15);
 		authors.setEditable(false);
 		String[] boxOptions = new String[100];
@@ -98,6 +105,9 @@ public class NewBookPanel extends JPanel {
 		gc.gridy = 3;
 		gc.gridx = 1;
 		add(publisherNameField, gc);
+		gc.gridy = 3;
+		gc.gridx = 2;
+		add(addPublisherBtn, gc);
 		gc.gridy = 4;
 		gc.gridx = 0;
 		add(publicationYearLabel, gc);
@@ -163,7 +173,22 @@ public class NewBookPanel extends JPanel {
 		addBookBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				listener.eventOccured(e);
+				String errorMsg = NewBookPanel.this.validateForm();
+				if (errorMsg.equals("")) {
+					int isbn = Integer.parseInt(bookISBNField.getText());
+					int threshold = Integer.parseInt(thresholdField.getText());
+					int numberOfCopies = Integer.parseInt(numberOfCopiesField.getText());
+					int price = Integer.parseInt(priceField.getText());
+					int year = Integer.parseInt(yearComboBox.getItemAt(yearComboBox.getSelectedIndex()));
+					listener.eventOccured(new BookEvent(this, isbn, 
+							bookTitleField.getText(), publisherNameField.getText(),
+							year, price, Enum.valueOf(Category.class,
+							getSelectedButtonText(categoryGroup).toUpperCase()),
+							threshold, numberOfCopies));
+				} else {
+					JOptionPane.showMessageDialog(null, errorMsg, "Invalid input",
+							JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		addAuthorBtn.addActionListener(new ActionListener() {
@@ -174,7 +199,15 @@ public class NewBookPanel extends JPanel {
 				authors.setEditable(false);
 			}
 		});
-		this.setBackground(java.awt.Color.CYAN);
+		addPublisherBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				listener.eventOccured(e);
+			}
+		});
+		this.setBackground(java.awt.Color.GRAY);
+		addPublisherBtn.setBackground(java.awt.Color.orange);
+		addAuthorBtn.setBackground(java.awt.Color.orange);
 	}
 	
 	public void setListener(Listener listener) {
@@ -184,6 +217,72 @@ public class NewBookPanel extends JPanel {
 	public JButton getAddBookBtn() {
 		return addBookBtn;
 	}
+	
+	public JButton getAddPublisherBtn() {
+		return addPublisherBtn;
+	}
+	
+	private String validateForm() {
+		StringBuilder errorMsg = new StringBuilder();
+		if (bookISBNField.getText().isEmpty()) {
+			errorMsg.append("ISBN field is mandatory\n");
+		}
+		try {
+			int isbn = Integer.parseInt(bookISBNField.getText());
+			if (isbn <= 0) throw new Exception();
+		} catch(Exception e) {
+			errorMsg.append("ISBN is not valid\n");
+		}
+		if (bookTitleField.getText().isEmpty()) {
+			errorMsg.append("Title field is mandatory\n");
+		}
+		if (publisherNameField.getText().isEmpty()) {
+			errorMsg.append("Publisher field is mandatory\n");
+		}
+		if (priceField.getText().isEmpty()) {
+			errorMsg.append("Price field is mandatory\n");
+		}
+		try {
+			int price = Integer.parseInt(priceField.getText());
+			if (price <= 0) throw new Exception();
+		} catch(Exception e) {
+			errorMsg.append("Price is not valid\n");
+		}
+		if (thresholdField.getText().isEmpty()) {
+			errorMsg.append("Threshold field is mandatory\n");
+		}
+		try {
+			int threshold = Integer.parseInt(thresholdField.getText());
+			if (threshold <= 0) throw new Exception();
+		} catch(Exception e) {
+			errorMsg.append("Threshold is not valid\n");
+		}
+		if (numberOfCopiesField.getText().isEmpty()) {
+			errorMsg.append("Copies field is mandatory\n");
+		}
+		try {
+			int numberOfCopies = Integer.parseInt(numberOfCopiesField.getText());
+			if (numberOfCopies <= 0) throw new Exception();
+		} catch(Exception e) {
+			errorMsg.append("Number of copies is not valid\n");
+		}
+		if (authorField.getText().isEmpty()) {
+			errorMsg.append("Author field is mandatory\n");
+		}
+		
+		return errorMsg.toString();
+	}
+	
+	public String getSelectedButtonText(ButtonGroup buttonGroup) {
+        for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements(); ) {
+            AbstractButton button = buttons.nextElement();
+            if (button.isSelected()) {
+                return button.getText();
+            }
+        }
+        return null;
+    }
+	
 	private static final long serialVersionUID = 1452871517467335603L;
 
 }
