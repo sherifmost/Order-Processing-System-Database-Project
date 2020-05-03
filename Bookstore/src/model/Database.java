@@ -62,10 +62,9 @@ public class Database {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void signUpSuperUser() {
-		User sudo = new User("root", "root", "root", "root@alexu.edu.eg",
-				"password", "FOE - Shatby", "07775000");
+		User sudo = new User("root", "root", "root", "root@alexu.edu.eg", "password", "FOE - Shatby", "07775000");
 		sudo.setManager();
 		if (!isDuplicateUser(sudo.getUserName(), sudo.getEmail())) {
 			signUpNewUser(sudo);
@@ -80,11 +79,11 @@ public class Database {
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-
+		ResultSet rs;
 		try {
 			Statement statement = connection.createStatement();
 			// Made it select all to fill in the logged in user data
-			ResultSet rs = statement.executeQuery("SELECT * FROM USER where username = '" + username + "'");
+			rs = statement.executeQuery("SELECT * FROM USER where username = '" + username + "'");
 			if (rs.next()) {
 				String tempPass = rs.getString("passwordHash");
 				if (tempPass.compareTo(hashedPassword) != 0) {
@@ -99,6 +98,16 @@ public class Database {
 			}
 		} catch (SQLException e) {
 			return e.getLocalizedMessage();
+		}
+		if (errorMsg.equals("NoError")) {
+			try {
+				fillInUser(rs.getString("userName"), rs.getString("Fname"), rs.getString("Lname"),
+						rs.getString("email"), password, rs.getString("shippingAddress"), rs.getString("phone"),
+						rs.getBoolean("isManager"));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return errorMsg;
 	}
@@ -225,21 +234,20 @@ public class Database {
 		}
 		return isDuplicate;
 	}
-	
+
 	public void addNewBook(Book book) {
 		try {
 			Statement statement = connection.createStatement();
-			String operation = "INSERT INTO BOOK VALUES('" + book.getISBN() + "', '"
-					+ book.getTitle() + "', '" + book.getPublisherName() + "', '" +
-					book.getPublicationYear() + "', '" + book.getPrice() + "', '" + 
-					book.getCategory() + "', '" + book.getThreshold() + "', '" +
-					book.getCopies() + "')";
+			String operation = "INSERT INTO BOOK VALUES('" + book.getISBN() + "', '" + book.getTitle() + "', '"
+					+ book.getPublisherName() + "', '" + book.getPublicationYear() + "', '" + book.getPrice() + "', '"
+					+ book.getCategory() + "', '" + book.getThreshold() + "', '" + book.getCopies() + "')";
 			statement.execute(operation);
 			statement.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
+
 	private boolean userNameExists(String userName) {
 		boolean isDuplicate = false;
 		try {
@@ -260,6 +268,7 @@ public class Database {
 
 		return isDuplicate;
 	}
+
 	// Function to fill in the logged in user data
 	private void fillInUser(String userName, String firstName, String lastName, String email, String password,
 			String shippingAddress, String phone, boolean isManager) {
@@ -273,13 +282,13 @@ public class Database {
 	public static void setLoggedInUser(User loggedInUser) {
 		Database.loggedInUser = loggedInUser;
 	}
-	
+
 	public void searchBooks(SearchQuery searchQuery) {
 		try {
 			Statement statement = connection.createStatement();
 			StringBuilder sb = new StringBuilder();
 			String mainOperation, publisherFilter, lowerPriceFilter, upperPriceFilter, fromYearFilter, toYearFilter;
-			mainOperation = "SELECT * FROM BOOK WHERE TITLE LIKE '%" + searchQuery.getBookTitle() + "%'" 
+			mainOperation = "SELECT * FROM BOOK WHERE TITLE LIKE '%" + searchQuery.getBookTitle() + "%'"
 					+ " AND CATEGORY = '" + searchQuery.getCategory() + "'";
 			publisherFilter = " AND PUBLISHERNAME LIKE '%" + searchQuery.getPublisherName() + "%'";
 			lowerPriceFilter = " AND PRICE >= '" + searchQuery.getLowerPrice() + "'";
@@ -302,7 +311,7 @@ public class Database {
 			if (searchQuery.getToYear() != 2020) {
 				sb.append(toYearFilter);
 			}
-					
+
 			ResultSet rs = statement.executeQuery(sb.toString());
 			while (rs.next()) {
 				System.out.println();
@@ -312,13 +321,13 @@ public class Database {
 				System.out.print(rs.getString("publicationYear") + "  ");
 				System.out.print(rs.getString("price") + "  ");
 				// next steps:
-				// show results in a table 
+				// show results in a table
 				// add an option to the user for book selection
-				}
-				statement.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
 			}
-				
+			statement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 	}
 }
