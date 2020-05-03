@@ -3,10 +3,12 @@ package controller;
 import model.Book;
 import model.Database;
 import model.Publisher;
+import model.SearchQuery;
 import model.User;
 import view.BookEvent;
 import view.LoginEvent;
 import view.PublisherEvent;
+import view.SearchEvent;
 import view.SignUpEvent;
 
 public class Controller {
@@ -58,5 +60,17 @@ public class Controller {
 
 	public String logIn(LoginEvent e) {
 		return db.signIn(e.getUsername(), e.getPassword());
+	}
+	
+	public void search(SearchEvent e) {
+		SearchQuery query = new SearchQuery();
+		query.setBookTitle(e.getBookTitle());
+		query.setCategory(e.getCategory());
+		query.setFromYear(e.getFromYear());
+		query.setLowerPrice(e.getLowerPrice());
+		query.setPublisherName(e.getPublisherName());
+		query.setToYear(e.getToYear());
+		query.setUpperPrice(e.getUpperPrice());
+		db.searchBooks(query);
 	}
 }

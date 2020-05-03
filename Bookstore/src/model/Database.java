@@ -165,4 +165,52 @@ public class Database {
 			e.printStackTrace();
 		}
 	}
+	
+	public void searchBooks(SearchQuery searchQuery) {
+		try {
+			Statement statement = connection.createStatement();
+			StringBuilder sb = new StringBuilder();
+			String mainOperation, publisherFilter, lowerPriceFilter, upperPriceFilter, fromYearFilter, toYearFilter;
+			mainOperation = "SELECT * FROM BOOK WHERE TITLE LIKE '%" + searchQuery.getBookTitle() + "%'" 
+					+ " AND CATEGORY = '" + searchQuery.getCategory() + "'";
+			publisherFilter = " AND PUBLISHERNAME LIKE '%" + searchQuery.getPublisherName() + "%'";
+			lowerPriceFilter = " AND PRICE >= '" + searchQuery.getLowerPrice() + "'";
+			upperPriceFilter = "AND PRICE <= '" + searchQuery.getUpperPrice() + "'";
+			fromYearFilter = " AND PUBLICATIONYEAR >= '" + searchQuery.getFromYear() + "'";
+			toYearFilter = " AND PUBLICATIONYEAR <= '" + searchQuery.getToYear() + "'";
+			sb.append(mainOperation);
+			if (searchQuery.getPublisherName().compareTo("none") != 0) {
+				sb.append(publisherFilter);
+			}
+			if (searchQuery.getLowerPrice() != 0) {
+				sb.append(lowerPriceFilter);
+			}
+			if (searchQuery.getUpperPrice() != 999999) {
+				sb.append(upperPriceFilter);
+			}
+			if (searchQuery.getFromYear() != 1921) {
+				sb.append(fromYearFilter);
+			}
+			if (searchQuery.getToYear() != 2020) {
+				sb.append(toYearFilter);
+			}
+			
+			ResultSet rs = statement.executeQuery(sb.toString());
+			while (rs.next()) {
+				System.out.println();
+				System.out.print(rs.getString("ISBN") + "  ");
+				System.out.print(rs.getString("title") + "  ");
+				System.out.print(rs.getString("publisherName") + "  ");
+				System.out.print(rs.getString("publicationYear") + "  ");
+				System.out.print(rs.getString("price") + "  ");
+				// next steps:
+				// show results in a table 
+				// add an option to the user for book selection
+			}
+			statement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
 }

@@ -13,7 +13,7 @@ public class ManagerPanel extends JPanel {
 
 	private static final long serialVersionUID = -1715362469751215553L;
 	private JButton addBookBtn, modifyBookBtn, placeOrderBtn, confirmOrderBtn,
-	promoteUsersBtn, viewReportsBtn;
+	promoteUsersBtn, viewReportsBtn, searchBtn;
 	private Listener listener;
 	
 	public ManagerPanel() {
@@ -23,12 +23,15 @@ public class ManagerPanel extends JPanel {
 		confirmOrderBtn = new JButton("Confirm orders");
 		promoteUsersBtn = new JButton("Promote registered customers");
 		viewReportsBtn = new JButton("View sales reports");
+		searchBtn = new JButton("Search Books");
 		addBookBtn.setBackground(java.awt.Color.RED);
 		modifyBookBtn.setBackground(java.awt.Color.RED);
 		placeOrderBtn.setBackground(java.awt.Color.RED);
 		confirmOrderBtn.setBackground(java.awt.Color.RED);
 		promoteUsersBtn.setBackground(java.awt.Color.RED);
 		viewReportsBtn.setBackground(java.awt.Color.RED);
+		searchBtn.setBackground(java.awt.Color.RED);
+
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridx = 0;
@@ -53,8 +56,18 @@ public class ManagerPanel extends JPanel {
 		gc.gridx = 0;
 		gc.gridy = 5;
 		add(viewReportsBtn, gc);
+		gc.gridx = 0;
+		gc.gridy = 6;
+		add(searchBtn, gc);
 		this.setBackground(java.awt.Color.BLACK);
 		addBookBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				listener.eventOccured(e);
+			}
+		});
+		
+		searchBtn.addActionListener(new ActionListener() {	
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				listener.eventOccured(e);
@@ -84,6 +97,10 @@ public class ManagerPanel extends JPanel {
 
 	public JButton getViewReportsBtn() {
 		return viewReportsBtn;
+	}
+	
+	public JButton getSearchBtn() {
+		return searchBtn;
 	}
 
 	void setListener(Listener listener) {

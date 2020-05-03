@@ -18,6 +18,7 @@ public class MainFrame extends JFrame {
 	private ManagerPanel managerPanel;
 	private PublisherPanel publisherPanel;
 	private NewBookPanel newBookPanel;
+	private SearchPanel searchPanel;
 	private static MainFrame uniqueInstance;
 	private static JPanel cards;
 
@@ -29,6 +30,7 @@ public class MainFrame extends JFrame {
 		managerPanel = new ManagerPanel();
 		publisherPanel = new PublisherPanel();
 		newBookPanel = new NewBookPanel();
+		searchPanel = new SearchPanel();
 		cards = new JPanel(new CardLayout());
 		loginPanel.setListener(new Listener() {
 			@Override
@@ -72,6 +74,9 @@ public class MainFrame extends JFrame {
 				if (e.getSource() == managerPanel.getAddBookBtn()) {
 					CardLayout cl = (CardLayout) cards.getLayout();
 					cl.show(cards, "NEWBOOK");
+				} else if (e.getSource() == managerPanel.getSearchBtn()) {
+					CardLayout cl = (CardLayout) cards.getLayout();
+					cl.show(cards, "SEARCH");
 				}
 			}
 		});
@@ -89,6 +94,15 @@ public class MainFrame extends JFrame {
 				controller.addBook(e);
 			}
 		});
+		
+		searchPanel.setListener(new Listener() {
+			@Override
+			public void eventOccured(SearchEvent e) {
+				controller.search(e);
+			}
+		});
+		
+	
 		controller.connectToDB();
 		setMinimumSize(new Dimension(1000, 700));
 		setVisible(true);
@@ -98,6 +112,7 @@ public class MainFrame extends JFrame {
 		cards.add(managerPanel, "MANAGER");
 		cards.add(publisherPanel, "PUBLISHER");
 		cards.add(newBookPanel, "NEWBOOK");
+		cards.add(searchPanel, "SEARCH");
 		this.add(cards);	
 	}
 
