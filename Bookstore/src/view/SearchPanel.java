@@ -1,13 +1,10 @@
 package view;
 
-import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Enumeration;
 
 import javax.swing.AbstractButton;
@@ -18,15 +15,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.text.TabExpander;
-
 import utils.Category;
-import model.Book;
 
-public class SearchPanel extends JPanel{
+public class SearchPanel extends JPanel {
 
 	/**
 	 * 
@@ -170,7 +162,8 @@ public class SearchPanel extends JPanel{
 		add(searchBtn, gc);
 		gc.gridx = 0;
 		gc.gridy++;
-
+		gc.gridwidth = 4;
+		gc.ipady = 100;
 		add(tablePanel, gc);
 
 	
@@ -196,6 +189,10 @@ public class SearchPanel extends JPanel{
 		});
 		
 		
+	}
+	
+	public TablePanel getTablePanel() {
+		return tablePanel;
 	}
 	
 	public void setListener(Listener listener) {

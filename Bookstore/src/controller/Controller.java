@@ -66,7 +66,7 @@ public class Controller {
 		return db.signIn(e.getUsername(), e.getPassword(), e.isManager());
 	}
 	
-	public ArrayList<Book> searchBooks(SearchEvent e) {
+	public ArrayList<BookEvent> searchBooks(SearchEvent e) {
 		SearchQuery query = new SearchQuery();
 		query.setBookTitle(e.getBookTitle());
 		query.setCategory(e.getCategory());
@@ -75,7 +75,13 @@ public class Controller {
 		query.setPublisherName(e.getPublisherName());
 		query.setToYear(e.getToYear());
 		query.setUpperPrice(e.getUpperPrice());
-		return db.searchBooks(query);
+		ArrayList<BookEvent> results = new ArrayList<>();
+		for (Book book : db.searchBooks(query)) {
+			results.add(new BookEvent(this, book.getISBN(), book.getTitle(), book.getPublisherName(),
+					book.getPublicationYear(), book.getPrice(), book.getCategory(),
+					book.getThreshold(), book.getCopies()));
+		}
+		return results;
 	}
 
 	public boolean updateUserData(UpdateDataEvent e) {

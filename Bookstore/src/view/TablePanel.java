@@ -3,11 +3,12 @@ package view;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import model.Book;
 
-public class TablePanel extends JTable{
+public class TablePanel extends JTable {
 	
+	private static final long serialVersionUID = -805205485500366310L;
 	private JTable table;
 	private TableModel tableModel;
 	
@@ -15,10 +16,10 @@ public class TablePanel extends JTable{
 		tableModel = new TableModel();
 		table = new JTable(tableModel);
 		setLayout(new BorderLayout());
-		add(table, BorderLayout.CENTER);
+		add(new JScrollPane(table), BorderLayout.CENTER);
 	}
 	
-	public void setData(ArrayList<Book> tableData) {
+	public void setData(ArrayList<BookEvent> tableData) {
 		tableModel.setData(tableData);
 	}
 	

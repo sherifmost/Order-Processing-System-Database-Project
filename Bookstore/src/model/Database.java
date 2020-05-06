@@ -1,6 +1,5 @@
 package model;
 
-import java.awt.List;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -329,13 +328,6 @@ public class Database {
 				book.setThreshold(Integer.parseInt(rs.getString("Threshold")));
 				book.setTitle(rs.getString("title"));
 				booksList.add(book);
-				System.out.println();
-				System.out.print(rs.getString("ISBN") + "  ");
-				System.out.print(rs.getString("title") + "  ");
-				System.out.print(rs.getString("publisherName") + "  ");
-				System.out.print(rs.getString("publicationYear") + "  ");
-				System.out.print(rs.getString("price") + "  ");
-				System.out.println(categoryString);
 				// next steps:
 				// show results in a table
 				// add an option to the user for book selection

@@ -4,21 +4,20 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import model.Book;
 
-public class TableModel extends AbstractTableModel{
+public class TableModel extends AbstractTableModel {
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private ArrayList<Book> tableData;
+	private ArrayList<BookEvent> tableData;
 	
 	public TableModel() {
-		tableData = new ArrayList<Book>();
+		tableData = new ArrayList<BookEvent>();
 	}
 
-	public void setData(ArrayList<Book> tableData) {
+	public void setData(ArrayList<BookEvent> tableData) {
 		this.tableData = tableData;
 	}
 	@Override
@@ -33,9 +32,7 @@ public class TableModel extends AbstractTableModel{
 
 	@Override
 	public Object getValueAt(int row, int col) {
-		Book book = tableData.get(row);
-		System.out.println("in");
-		
+		BookEvent book = tableData.get(row);		
 		switch(col) {
 			case 0: return book.getTitle();
 			case 1: return book.getISBN();
