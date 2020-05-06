@@ -1,10 +1,13 @@
 package view;
 
+import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Enumeration;
 
 import javax.swing.AbstractButton;
@@ -15,10 +18,13 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.text.TabExpander;
 
 import utils.Category;
-
+import model.Book;
 
 public class SearchPanel extends JPanel{
 
@@ -34,6 +40,7 @@ public class SearchPanel extends JPanel{
 	private JComboBox<String> fromYearComboBox, toYearComboBox;
 	private JButton searchBtn;
 	private Listener listener;
+	private TablePanel tablePanel;
 	
 	public SearchPanel() {
 		// labels
@@ -80,7 +87,11 @@ public class SearchPanel extends JPanel{
 		// button
 		searchBtn = new JButton("SEARCH");
 		
-		// set layout
+		// table
+		tablePanel = new TablePanel();
+		
+		
+	   // set layout
 		this.setLayout(new GridBagLayout());
 		
 		GridBagConstraints gc = new GridBagConstraints();
@@ -157,6 +168,11 @@ public class SearchPanel extends JPanel{
 		gc.ipady = 30;
 		gc.fill = GridBagConstraints.HORIZONTAL;
 		add(searchBtn, gc);
+		gc.gridx = 0;
+		gc.gridy++;
+
+		add(tablePanel, gc);
+
 	
 		// search button action
 		searchBtn.addActionListener(new ActionListener() {
@@ -213,7 +229,6 @@ public class SearchPanel extends JPanel{
 		
 		return errorMsg;
 	}
-	
 	
 	
 }

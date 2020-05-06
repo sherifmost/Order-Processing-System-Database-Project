@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.ArrayList;
+
 import model.Book;
 import model.Database;
 import model.Publisher;
@@ -64,7 +66,7 @@ public class Controller {
 		return db.signIn(e.getUsername(), e.getPassword(), e.isManager());
 	}
 	
-	public void search(SearchEvent e) {
+	public ArrayList<Book> searchBooks(SearchEvent e) {
 		SearchQuery query = new SearchQuery();
 		query.setBookTitle(e.getBookTitle());
 		query.setCategory(e.getCategory());
@@ -73,7 +75,7 @@ public class Controller {
 		query.setPublisherName(e.getPublisherName());
 		query.setToYear(e.getToYear());
 		query.setUpperPrice(e.getUpperPrice());
-		db.searchBooks(query);
+		return db.searchBooks(query);
 	}
 
 	public boolean updateUserData(UpdateDataEvent e) {

@@ -2,6 +2,7 @@ package view;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.util.ArrayList;
 import java.util.EventObject;
 
 import javax.swing.JFrame;
@@ -9,6 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import controller.Controller;
+import model.Book;
 
 public class MainFrame extends JFrame {
 	private static final long serialVersionUID = 1005606185398506511L;
@@ -23,6 +25,7 @@ public class MainFrame extends JFrame {
 	private SearchPanel searchPanel;
 	private static MainFrame uniqueInstance;
 	private static JPanel cards;
+	private TablePanel tablePanel;
 	// constants
 	private String editInfoName = "EDITUSERINFO";
 
@@ -36,6 +39,7 @@ public class MainFrame extends JFrame {
 		newBookPanel = new NewBookPanel();
 		userPanel = new UserPanel();
 		searchPanel = new SearchPanel();
+		tablePanel = new TablePanel();
 		cards = new JPanel(new CardLayout());
 		loginPanel.setListener(new Listener() {
 			@Override
@@ -107,7 +111,8 @@ public class MainFrame extends JFrame {
 		searchPanel.setListener(new Listener() {
 			@Override
 			public void eventOccured(SearchEvent e) {
-				controller.search(e);
+				tablePanel.setData(controller.searchBooks(e));
+				tablePanel.refresh();
 			}
 		});
 		userPanel.setListener(new Listener() {
@@ -167,4 +172,5 @@ public class MainFrame extends JFrame {
 		}
 		return uniqueInstance;
 	}
+	
 }

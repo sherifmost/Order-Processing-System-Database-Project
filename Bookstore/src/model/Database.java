@@ -1,12 +1,15 @@
 package model;
 
+import java.awt.List;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
+import utils.Category;
 import view.UpdateDataEvent;
 
 public class Database {
@@ -282,7 +285,8 @@ public class Database {
 		Database.loggedInUser = loggedInUser;
 	}
 
-	public void searchBooks(SearchQuery searchQuery) {
+	public ArrayList<Book> searchBooks(SearchQuery searchQuery) {
+		ArrayList<Book> booksList = new ArrayList<Book>();
 		try {
 			Statement statement = connection.createStatement();
 			StringBuilder sb = new StringBuilder();
@@ -313,12 +317,25 @@ public class Database {
 
 			ResultSet rs = statement.executeQuery(sb.toString());
 			while (rs.next()) {
+				Book book = new Book();
+				String categoryString = rs.getString("category");
+				book.setCategory(Enum.valueOf(Category.class,
+						categoryString.toUpperCase()));
+				book.setCopies(Integer.parseInt(rs.getString("copies")));
+				book.setISBN(Integer.parseInt(rs.getString("ISBN")));
+				book.setPrice(Integer.parseInt(rs.getString("price")));
+				//book.setPublicationYear(Integer.parseInt(String.valueOf(rs.getDate("PublicationYear"))));
+				book.setPublisherName(rs.getString("publisherName"));
+				book.setThreshold(Integer.parseInt(rs.getString("Threshold")));
+				book.setTitle(rs.getString("title"));
+				booksList.add(book);
 				System.out.println();
 				System.out.print(rs.getString("ISBN") + "  ");
 				System.out.print(rs.getString("title") + "  ");
 				System.out.print(rs.getString("publisherName") + "  ");
 				System.out.print(rs.getString("publicationYear") + "  ");
 				System.out.print(rs.getString("price") + "  ");
+				System.out.println(categoryString);
 				// next steps:
 				// show results in a table
 				// add an option to the user for book selection
@@ -327,6 +344,7 @@ public class Database {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
+		
+		return booksList;
 	}
 }
