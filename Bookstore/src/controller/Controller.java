@@ -9,6 +9,7 @@ import model.SearchQuery;
 import model.User;
 import view.BookEvent;
 import view.LoginEvent;
+import view.PromotionEvent;
 import view.PublisherEvent;
 import view.SearchEvent;
 import view.SignUpEvent;
@@ -19,7 +20,7 @@ public class Controller {
 	User user;
 	Publisher publisher;
 	Book book;
-	
+
 	public Controller() {
 		db = new Database();
 		user = new User();
@@ -49,7 +50,7 @@ public class Controller {
 		publisher.setTelephone(e.getPublihserTelephone());
 		db.addNewPublisher(publisher);
 	}
-	
+
 	public void addBook(BookEvent e) {
 		book.setCategory(e.getCategory());
 		book.setCopies(e.getCopies());
@@ -65,7 +66,7 @@ public class Controller {
 	public String logIn(LoginEvent e) {
 		return db.signIn(e.getUsername(), e.getPassword(), e.isManager());
 	}
-	
+
 	public ArrayList<BookEvent> searchBooks(SearchEvent e) {
 		SearchQuery query = new SearchQuery();
 		query.setBookTitle(e.getBookTitle());
@@ -78,13 +79,17 @@ public class Controller {
 		ArrayList<BookEvent> results = new ArrayList<>();
 		for (Book book : db.searchBooks(query)) {
 			results.add(new BookEvent(this, book.getISBN(), book.getTitle(), book.getPublisherName(),
-					book.getPublicationYear(), book.getPrice(), book.getCategory(),
-					book.getThreshold(), book.getCopies()));
+					book.getPublicationYear(), book.getPrice(), book.getCategory(), book.getThreshold(),
+					book.getCopies()));
 		}
 		return results;
 	}
 
 	public boolean updateUserData(UpdateDataEvent e) {
 		return db.updateUser(e);
+	}
+
+	public boolean promoteUser(PromotionEvent e) {
+		return db.promoteUser(e);
 	}
 }

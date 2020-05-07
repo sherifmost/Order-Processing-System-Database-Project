@@ -9,10 +9,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import utils.Category;
+import utils.MetaData;
+import view.PromotionEvent;
 import view.UpdateDataEvent;
 
 public class Database {
-	private Connection connection;
+	private static Connection connection;
 	private static User loggedInUser;
 
 	public void createConnection() {
@@ -249,7 +251,7 @@ public class Database {
 		}
 	}
 
-	private boolean userNameExists(String userName) {
+	public static boolean userNameExists(String userName) {
 		boolean isDuplicate = false;
 		try {
 			Statement statement = connection.createStatement();
@@ -318,12 +320,11 @@ public class Database {
 			while (rs.next()) {
 				Book book = new Book();
 				String categoryString = rs.getString("category");
-				book.setCategory(Enum.valueOf(Category.class,
-						categoryString.toUpperCase()));
+				book.setCategory(Enum.valueOf(Category.class, categoryString.toUpperCase()));
 				book.setCopies(Integer.parseInt(rs.getString("copies")));
 				book.setISBN(Integer.parseInt(rs.getString("ISBN")));
 				book.setPrice(Integer.parseInt(rs.getString("price")));
-				//book.setPublicationYear(Integer.parseInt(String.valueOf(rs.getDate("PublicationYear"))));
+				// book.setPublicationYear(Integer.parseInt(String.valueOf(rs.getDate("PublicationYear"))));
 				book.setPublisherName(rs.getString("publisherName"));
 				book.setThreshold(Integer.parseInt(rs.getString("Threshold")));
 				book.setTitle(rs.getString("title"));
@@ -336,7 +337,38 @@ public class Database {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return booksList;
+	}
+
+	// Promoting the user
+	public boolean promoteUser(PromotionEvent e) {
+		String userName = e.getUserName();
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery(
+					"SELECT " + MetaData.USER_ISMANAGER + " FROM USER WHERE username = " + "'" + userName + "'");
+			while (rs.next()) {
+				Boolean isManager = rs.getBoolean(MetaData.USER_ISMANAGER);
+				if (isManager) {
+					return false;
+				}
+			}
+			statement.close();
+		} catch (SQLException exception) {
+			exception.printStackTrace();
+		}
+		// promoting the user
+		try {
+			Statement statement = connection.createStatement();
+			String operation = "UPDATE USER SET " + MetaData.USER_ISMANAGER + " = true WHERE " + MetaData.USER_NAME
+					+ " = '" + userName + "'";
+			statement.execute(operation);
+			statement.close();
+		} catch (SQLException exception) {
+			exception.printStackTrace();
+		}
+
+		return true;
 	}
 }
