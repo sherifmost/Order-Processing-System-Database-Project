@@ -13,7 +13,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import model.Database;
-import model.UserRegistrationInfo;
+import model.User;
 
 public class EditInfoPanel extends JPanel {
 
@@ -28,7 +28,7 @@ public class EditInfoPanel extends JPanel {
 
 	// The logged in user data is filled in a static variable in the database class
 	// to ease the access
-	private UserRegistrationInfo user = Database.getLoggedInUser();
+	private User user = Database.getLoggedInUser();
 
 	public EditInfoPanel() {
 		editInfoFormLabel = new JLabel("Account Info");

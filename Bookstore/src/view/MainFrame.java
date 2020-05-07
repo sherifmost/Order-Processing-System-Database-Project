@@ -48,7 +48,7 @@ public class MainFrame extends JFrame {
 			@Override
 			public void eventOccurred(LoginEvent e) {
 				String errorMsg = controller.logIn(e);
-				searchPanel.setManager(controller.isManager());
+				searchPanel.setManager(e.isManager());
 				if (errorMsg.equals("NoError")) {
 					CardLayout cl = (CardLayout) cards.getLayout();
 					if (e.isManager()) {
@@ -117,9 +117,10 @@ public class MainFrame extends JFrame {
 			}
 
 			@Override
-			public void eventOccured(AddToCartEvent e) {
+			public void eventOccured(BookEvent e) {
 				controller.addBookToCart(e);
 			}
+			
 
 		});
 		userPanel.setListener(new Listener() {

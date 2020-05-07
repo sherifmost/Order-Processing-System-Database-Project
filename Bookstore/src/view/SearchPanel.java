@@ -41,6 +41,9 @@ public class SearchPanel extends JPanel {
 	private boolean isManager;
 
 	private int selectedISBN, availableQuantity;
+	private String selectedTitle, selectedPublisher;
+	private int selectedPrice;
+	private Category selectedCategory;
 
 	public SearchPanel() {
 		// labels
@@ -107,10 +110,13 @@ public class SearchPanel extends JPanel {
 		add(searchLabel, gc);
 		gc.insets = new Insets(10, 10, 10, 10);
 		gc.fill = GridBagConstraints.NONE;
+		gc.ipadx = 20;
+		gc.ipady = 10;
+		gc.gridy = 2;
 		gc.gridy = 1;
 		gc.gridx = 0;
 		gc.gridwidth = 1;
-		;
+		
 
 		add(bookTitleLabel, gc);
 		gc.gridy = 1;
@@ -232,14 +238,17 @@ public class SearchPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				// we need to check that the entered value is integer
 				int quantity = Integer.parseInt(quantityField.getText());
+				
 				if (quantity <= availableQuantity) {
-					listener.eventOccured(new AddToCartEvent(this, selectedISBN, quantity));
+					listener.eventOccured(new BookEvent(this, selectedISBN, selectedTitle, selectedPublisher, selectedPrice,
+							selectedCategory, availableQuantity, quantity));
 				} else {
 					JOptionPane.showMessageDialog(null, "we cannot support this amount of books !", "Invalid Operation",
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
+		
 
 		tablePanel.getTable().addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
@@ -247,10 +256,14 @@ public class SearchPanel extends JPanel {
 				TableModel tableModel = tablePanel.getTableModel();
 				int row = table.rowAtPoint(e.getPoint());
 				table.getSelectionModel().setSelectionInterval(row, row);
-				String bookTitle = (String) tableModel.getValueAt(row, 0);
+				selectedTitle = (String) tableModel.getValueAt(row, 0);
 				selectedISBN = (int) tableModel.getValueAt(row, 1);
+				selectedCategory = (Category) tableModel.getValueAt(row, 2);
 				availableQuantity = (int) tableModel.getValueAt(row, 3);
-				selectedBookLabel.setText(bookTitle + "  -- ISBN: " + selectedISBN);
+				selectedPublisher = (String) tableModel.getValueAt(row, 4);
+				selectedPrice = (int) tableModel.getValueAt(row, 5);
+				
+				selectedBookLabel.setText(selectedTitle + "  -- ISBN: " + selectedISBN);
 
 			}
 		});
