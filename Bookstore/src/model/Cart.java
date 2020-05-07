@@ -8,12 +8,14 @@ public class Cart {
 	private ArrayList<Integer> quantities; 
 	private float totalSum;
 	
+	
 	public Cart() {
 		selectedBooks = new ArrayList<Book>();
 		quantities = new ArrayList<Integer>();
 		totalSum = 0;
 	}
 	
+
 	public void addBookToCart(Book book, int quantity) {
 		selectedBooks.add(book);
 		quantities.add(quantity);
@@ -30,6 +32,13 @@ public class Cart {
 	
 	public float getTotalSum() {
 		return totalSum;
+	}
+	
+	public void showCart() {
+		System.out.println("*************");
+		for (int i = 0; i < selectedBooks.size(); i++) {
+			System.out.println(selectedBooks.get(i).getTitle());
+		}
 	}
 	
 		

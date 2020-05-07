@@ -8,6 +8,7 @@ public class BookEvent extends EventObject {
 	private Category category;
 	private String title;
 	private String publisherName;
+	private int quantity;
 	private static final long serialVersionUID = -8246807540556498220L;
 	
 	public BookEvent(Object source) {
@@ -26,6 +27,19 @@ public class BookEvent extends EventObject {
 		this.threshold = threshold;
 		this.copies = copies;
 	}
+	
+	public BookEvent(Object source, int ISBN, String title, String publisherName, int price, Category category,
+			 int copies, int quantity) {
+		super(source);
+		this.ISBN = ISBN;
+		this.title = title;
+		this.publisherName = publisherName;
+		this.price = price;
+		this.category = category;
+		this.copies = copies;
+		this.setQuantity(quantity);
+	}
+
 
 	// getters and setters
 	public int getISBN() {
@@ -90,5 +104,13 @@ public class BookEvent extends EventObject {
 
 	public void setCopies(int copies) {
 		this.copies = copies;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 }

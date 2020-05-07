@@ -14,7 +14,7 @@ import view.PromotionEvent;
 import view.UpdateDataEvent;
 
 public class Database {
-	private static UserRegistrationInfo loggedInUser;
+	private static User loggedInUser;
 	private static Connection connection;
 
 	public void createConnection() {
@@ -43,7 +43,7 @@ public class Database {
 
 	// we can change the return type to boolean to return false in case of existing
 	// email
-	public void signUpNewUser(UserRegistrationInfo user) {
+	public void signUpNewUser(User user) {
 		if (isDuplicateUser(user.getUserName(), user.getEmail())) {
 			System.out.println("This username or email already exists!");
 			return;
@@ -68,7 +68,7 @@ public class Database {
 	}
 
 	public void signUpSuperUser() {
-		UserRegistrationInfo sudo = new UserRegistrationInfo("root", "root", "root", "root@alexu.edu.eg", "password",
+		User sudo = new User("root", "root", "root", "root@alexu.edu.eg", "password",
 				"FOE - Shatby", "07775000");
 		sudo.setManager();
 		if (!isDuplicateUser(sudo.getUserName(), sudo.getEmail())) {
@@ -276,16 +276,21 @@ public class Database {
 	// Function to fill in the logged in user data
 	private void fillInUser(String userName, String firstName, String lastName, String email, String password,
 			String shippingAddress, String phone, boolean isManager) {
-		setLoggedInUser(new UserRegistrationInfo(userName, firstName, lastName, email, password, shippingAddress, phone,
-				isManager));
+		Cart cart = new Cart();
+		setLoggedInUser(new User(userName, firstName, lastName, email, password, shippingAddress, phone,
+				isManager, cart));
 	}
 
-	public static UserRegistrationInfo getLoggedInUser() {
+	public static User getLoggedInUser() {
 		return loggedInUser;
 	}
 
-	public static void setLoggedInUser(UserRegistrationInfo loggedInUser) {
+	public static void setLoggedInUser(User loggedInUser) {
 		Database.loggedInUser = loggedInUser;
+	}
+	
+	public boolean isManager() {
+		return loggedInUser.isManager();
 	}
 
 	public ArrayList<Book> searchBooks(SearchQuery searchQuery) {
@@ -342,8 +347,16 @@ public class Database {
 
 		return booksList;
 	}
+	
+	public void addBookToCart(Book book, int quantity) {
+		Cart cart = loggedInUser.getCart();
+		cart.addBookToCart(book, quantity);
+		cart.showCart();
+	}
 
-	public boolean checkout(ArrayList<Book> books, ArrayList<Integer> quantities) {
+	public boolean checkout() {
+		ArrayList<Book> books = loggedInUser.getCart().getSelectedBooks();
+		ArrayList<Integer> quantities = loggedInUser.getCart().getQuantities();
 		boolean checkoutCompleted = false;
 
 		// check if enough books exist
