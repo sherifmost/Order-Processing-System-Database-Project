@@ -9,11 +9,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import utils.Category;
+import utils.MetaData;
+import view.PromotionEvent;
 import view.UpdateDataEvent;
 
 public class Database {
-	private Connection connection;
 	private static UserRegistrationInfo loggedInUser;
+	private static Connection connection;
 
 	public void createConnection() {
 		try {
@@ -66,7 +68,8 @@ public class Database {
 	}
 
 	public void signUpSuperUser() {
-		UserRegistrationInfo sudo = new UserRegistrationInfo("root", "root", "root", "root@alexu.edu.eg", "password", "FOE - Shatby", "07775000");
+		UserRegistrationInfo sudo = new UserRegistrationInfo("root", "root", "root", "root@alexu.edu.eg", "password",
+				"FOE - Shatby", "07775000");
 		sudo.setManager();
 		if (!isDuplicateUser(sudo.getUserName(), sudo.getEmail())) {
 			signUpNewUser(sudo);
@@ -249,7 +252,7 @@ public class Database {
 		}
 	}
 
-	private boolean userNameExists(String userName) {
+	public static boolean userNameExists(String userName) {
 		boolean isDuplicate = false;
 		try {
 			Statement statement = connection.createStatement();
@@ -273,7 +276,8 @@ public class Database {
 	// Function to fill in the logged in user data
 	private void fillInUser(String userName, String firstName, String lastName, String email, String password,
 			String shippingAddress, String phone, boolean isManager) {
-		setLoggedInUser(new UserRegistrationInfo(userName, firstName, lastName, email, password, shippingAddress, phone, isManager));
+		setLoggedInUser(new UserRegistrationInfo(userName, firstName, lastName, email, password, shippingAddress, phone,
+				isManager));
 	}
 
 	public static UserRegistrationInfo getLoggedInUser() {
@@ -318,12 +322,11 @@ public class Database {
 			while (rs.next()) {
 				Book book = new Book();
 				String categoryString = rs.getString("category");
-				book.setCategory(Enum.valueOf(Category.class,
-						categoryString.toUpperCase()));
+				book.setCategory(Enum.valueOf(Category.class, categoryString.toUpperCase()));
 				book.setCopies(Integer.parseInt(rs.getString("copies")));
 				book.setISBN(Integer.parseInt(rs.getString("ISBN")));
 				book.setPrice(Integer.parseInt(rs.getString("price")));
-				//book.setPublicationYear(Integer.parseInt(String.valueOf(rs.getDate("PublicationYear"))));
+				// book.setPublicationYear(Integer.parseInt(String.valueOf(rs.getDate("PublicationYear"))));
 				book.setPublisherName(rs.getString("publisherName"));
 				book.setThreshold(Integer.parseInt(rs.getString("Threshold")));
 				book.setTitle(rs.getString("title"));
@@ -336,17 +339,48 @@ public class Database {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return booksList;
 	}
-	
+
 	public boolean checkout(ArrayList<Book> books, ArrayList<Integer> quantities) {
 		boolean checkoutCompleted = false;
-		
+
 		// check if enough books exist
-		// 				then update the database and return true
-		// 		 else return false
-		
+		// then update the database and return true
+		// else return false
+
 		return checkoutCompleted;
+	}
+
+	// Promoting the user
+	public boolean promoteUser(PromotionEvent e) {
+		String userName = e.getUserName();
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery(
+					"SELECT " + MetaData.USER_ISMANAGER + " FROM USER WHERE username = " + "'" + userName + "'");
+			while (rs.next()) {
+				Boolean isManager = rs.getBoolean(MetaData.USER_ISMANAGER);
+				if (isManager) {
+					return false;
+				}
+			}
+			statement.close();
+		} catch (SQLException exception) {
+			exception.printStackTrace();
+		}
+		// promoting the user
+		try {
+			Statement statement = connection.createStatement();
+			String operation = "UPDATE USER SET " + MetaData.USER_ISMANAGER + " = true WHERE " + MetaData.USER_NAME
+					+ " = '" + userName + "'";
+			statement.execute(operation);
+			statement.close();
+		} catch (SQLException exception) {
+			exception.printStackTrace();
+		}
+
+		return true;
 	}
 }

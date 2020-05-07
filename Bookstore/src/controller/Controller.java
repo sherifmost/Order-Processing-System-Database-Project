@@ -12,6 +12,7 @@ import model.UserRegistrationInfo;
 import view.AddToCartEvent;
 import view.BookEvent;
 import view.LoginEvent;
+import view.PromotionEvent;
 import view.PublisherEvent;
 import view.SearchEvent;
 import view.SignUpEvent;
@@ -23,7 +24,7 @@ public class Controller {
 	Publisher publisher;
 	Book book;
 	User user;
-	
+
 	public Controller() {
 		db = new Database();
 		userInfo = new UserRegistrationInfo();
@@ -53,7 +54,7 @@ public class Controller {
 		publisher.setTelephone(e.getPublihserTelephone());
 		db.addNewPublisher(publisher);
 	}
-	
+
 	public void addBook(BookEvent e) {
 		book.setCategory(e.getCategory());
 		book.setCopies(e.getCopies());
@@ -70,7 +71,7 @@ public class Controller {
 		user = new User(e.getUsername(), e.isManager());
 		return db.signIn(e.getUsername(), e.getPassword(), e.isManager());
 	}
-	
+
 	public ArrayList<BookEvent> searchBooks(SearchEvent e) {
 		SearchQuery query = new SearchQuery();
 		query.setBookTitle(e.getBookTitle());
@@ -83,8 +84,8 @@ public class Controller {
 		ArrayList<BookEvent> results = new ArrayList<>();
 		for (Book book : db.searchBooks(query)) {
 			results.add(new BookEvent(this, book.getISBN(), book.getTitle(), book.getPublisherName(),
-					book.getPublicationYear(), book.getPrice(), book.getCategory(),
-					book.getThreshold(), book.getCopies()));
+					book.getPublicationYear(), book.getPrice(), book.getCategory(), book.getThreshold(),
+					book.getCopies()));
 		}
 		return results;
 	}
@@ -92,19 +93,23 @@ public class Controller {
 	public boolean updateUserData(UpdateDataEvent e) {
 		return db.updateUser(e);
 	}
-	
+
 	public void addBookToCart(AddToCartEvent e) {
 		Cart cart = user.getCart();
 		Book book = new Book();
 		book.setISBN(e.getBookISBN());
 		cart.addBookToCart(book, e.getQuantity());
 	}
-	
+
 	public boolean checkout() {
 		return db.checkout(user.getCart().getSelectedBooks(), user.getCart().getQuantities());
 	}
-	
+
 	public boolean isManager() {
 		return user.isManager();
+	}
+
+	public boolean promoteUser(PromotionEvent e) {
+		return db.promoteUser(e);
 	}
 }

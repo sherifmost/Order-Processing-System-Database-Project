@@ -17,10 +17,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 
 import utils.Category;
 
@@ -30,7 +28,8 @@ public class SearchPanel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JLabel searchLabel, bookTitleLabel, filtersLabel, categoryLabel, publisherNameLabel, priceRangeLabel, yearRangeLabel;
+	private JLabel searchLabel, bookTitleLabel, filtersLabel, categoryLabel, publisherNameLabel, priceRangeLabel,
+			yearRangeLabel;
 	private JLabel toPriceLabel, toYearLable, selectedBookLabel, quantityLabel;
 	private JTextField titleField, publisherNameField, lowerPrice, upperPrice, quantityField;
 	private ButtonGroup categoryGroup;
@@ -40,9 +39,9 @@ public class SearchPanel extends JPanel {
 	private Listener listener;
 	private TablePanel tablePanel;
 	private boolean isManager;
-	
+
 	private int selectedISBN, availableQuantity;
-	
+
 	public SearchPanel() {
 		// labels
 		searchLabel = new JLabel("SEARCH BOOKS");
@@ -57,14 +56,13 @@ public class SearchPanel extends JPanel {
 		selectedBookLabel = new JLabel("No selected Book !");
 		quantityLabel = new JLabel("select quantity:");
 
-		
 		// text fields
 		titleField = new JTextField(30);
 		publisherNameField = new JTextField(20);
 		lowerPrice = new JTextField(6);
 		upperPrice = new JTextField(6);
 		quantityField = new JTextField(2);
-		
+
 		// radio buttons
 		scienceBtn = new JRadioButton("Science");
 		artBtn = new JRadioButton("Art");
@@ -78,7 +76,7 @@ public class SearchPanel extends JPanel {
 		categoryGroup.add(historyBtn);
 		categoryGroup.add(geographyBtn);
 		scienceBtn.setSelected(true);
-		
+
 		// comboBoxes
 		String[] yearOptions = new String[100];
 		for (int i = 0, year = 1921; year <= 2020; year++, i++) {
@@ -88,19 +86,18 @@ public class SearchPanel extends JPanel {
 		toYearComboBox = new JComboBox<>(yearOptions);
 		fromYearComboBox.setSelectedIndex(0);
 		toYearComboBox.setSelectedIndex(yearOptions.length - 1);
-		
+
 		// button
 		searchBtn = new JButton("SEARCH");
 		modifyBtn = new JButton("Modify Book");
 		addToCartBtn = new JButton("Add To Cart");
-		
+
 		// table
 		tablePanel = new TablePanel();
-		
-		
-	   // set layout
+
+		// set layout
 		this.setLayout(new GridBagLayout());
-		
+
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridx = 0;
 		gc.gridy = 0;
@@ -112,8 +109,9 @@ public class SearchPanel extends JPanel {
 		gc.fill = GridBagConstraints.NONE;
 		gc.gridy = 1;
 		gc.gridx = 0;
-		gc.gridwidth = 1;;
-		
+		gc.gridwidth = 1;
+		;
+
 		add(bookTitleLabel, gc);
 		gc.gridy = 1;
 		gc.gridx = 1;
@@ -180,33 +178,32 @@ public class SearchPanel extends JPanel {
 		gc.gridwidth = 4;
 		gc.ipady = 100;
 		add(tablePanel, gc);
-	
+
 		// search button action
 		searchBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String errorMsg = validateSearchForm();
 				if (errorMsg == "") {
-				int lowerP = Integer.parseInt(lowerPrice.getText());
-				int upperP = Integer.parseInt(upperPrice.getText());
-				int from = Integer.parseInt(fromYearComboBox.getItemAt(fromYearComboBox.getSelectedIndex()));
-				int to = Integer.parseInt(toYearComboBox.getItemAt(toYearComboBox.getSelectedIndex()));
-				
-				listener.eventOccured(new SearchEvent(this, titleField.getText(), Enum.valueOf(Category.class,
-						getSelectedButtonText(categoryGroup).toUpperCase()), publisherNameField.getText(),
-						lowerP, upperP, from, to));
-				
-				gc.gridx = 0;
-				gc.gridy++;
-				add(selectedBookLabel, gc);
-				gc.gridx = 2;
-				gc.fill = GridBagConstraints.HORIZONTAL;
-				gc.ipady = 30;
-				gc.ipadx = 60;
-				if (isManager) {
+					int lowerP = Integer.parseInt(lowerPrice.getText());
+					int upperP = Integer.parseInt(upperPrice.getText());
+					int from = Integer.parseInt(fromYearComboBox.getItemAt(fromYearComboBox.getSelectedIndex()));
+					int to = Integer.parseInt(toYearComboBox.getItemAt(toYearComboBox.getSelectedIndex()));
+
+					listener.eventOccured(new SearchEvent(this, titleField.getText(),
+							Enum.valueOf(Category.class, getSelectedButtonText(categoryGroup).toUpperCase()),
+							publisherNameField.getText(), lowerP, upperP, from, to));
+
+					gc.gridx = 0;
+					gc.gridy++;
+					add(selectedBookLabel, gc);
+					gc.gridx = 2;
+					gc.fill = GridBagConstraints.HORIZONTAL;
+					gc.ipady = 30;
+					gc.ipadx = 60;
+					if (isManager) {
 						add(modifyBtn, gc);
-					}
-					else {
+					} else {
 						add(addToCartBtn, gc);
 						gc.gridy++;
 						gc.gridx = 0;
@@ -216,22 +213,21 @@ public class SearchPanel extends JPanel {
 						gc.ipadx = 20;
 						add(quantityField, gc);
 					}
-				
+
 				} else {
-					JOptionPane.showMessageDialog(null, errorMsg, "Invalid search input",
-							JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, errorMsg, "Invalid search input", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
-		
-		modifyBtn.addActionListener(new ActionListener() {	
+
+		modifyBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				
+
 			}
 		});
-		
-		addToCartBtn.addActionListener(new ActionListener() {	
+
+		addToCartBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// we need to check that the entered value is integer
@@ -244,7 +240,7 @@ public class SearchPanel extends JPanel {
 				}
 			}
 		});
-		
+
 		tablePanel.getTable().addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				JTable table = tablePanel.getTable();
@@ -255,31 +251,30 @@ public class SearchPanel extends JPanel {
 				selectedISBN = (int) tableModel.getValueAt(row, 1);
 				availableQuantity = (int) tableModel.getValueAt(row, 3);
 				selectedBookLabel.setText(bookTitle + "  -- ISBN: " + selectedISBN);
-				
+
 			}
 		});
-		
-		
+
 	}
-	
+
 	public TablePanel getTablePanel() {
 		return tablePanel;
 	}
-	
+
 	public void setListener(Listener listener) {
 		this.listener = listener;
 	}
-	
+
 	public String getSelectedButtonText(ButtonGroup buttonGroup) {
-        for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements(); ) {
-            AbstractButton button = buttons.nextElement();
-            if (button.isSelected()) {
-                return button.getText();
-            }
-        }
-        return null;
-    }
-	
+		for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
+			AbstractButton button = buttons.nextElement();
+			if (button.isSelected()) {
+				return button.getText();
+			}
+		}
+		return null;
+	}
+
 	public String validateSearchForm() {
 		String errorMsg = "";
 		if (titleField.getText().isEmpty()) {
@@ -294,7 +289,7 @@ public class SearchPanel extends JPanel {
 		if (upperPrice.getText().isEmpty()) {
 			upperPrice.setText("999999");
 		}
-		
+
 		return errorMsg;
 	}
 
@@ -305,8 +300,5 @@ public class SearchPanel extends JPanel {
 	public void setManager(boolean isManager) {
 		this.isManager = isManager;
 	}
-	
-	
-	
-	
+
 }

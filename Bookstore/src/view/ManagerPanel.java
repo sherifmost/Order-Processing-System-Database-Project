@@ -12,10 +12,10 @@ import javax.swing.JPanel;
 public class ManagerPanel extends JPanel {
 
 	private static final long serialVersionUID = -1715362469751215553L;
-	private JButton addBookBtn, modifyBookBtn, placeOrderBtn, confirmOrderBtn,
-	promoteUsersBtn, viewReportsBtn, searchBtn;
+	private JButton addBookBtn, modifyBookBtn, placeOrderBtn, confirmOrderBtn, promoteUsersBtn, viewReportsBtn,
+			searchBtn;
 	private Listener listener;
-	
+
 	public ManagerPanel() {
 		addBookBtn = new JButton("Add new books");
 		modifyBookBtn = new JButton("Modify existing books");
@@ -66,15 +66,21 @@ public class ManagerPanel extends JPanel {
 				listener.eventOccured(e);
 			}
 		});
-		
-		searchBtn.addActionListener(new ActionListener() {	
+
+		searchBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				listener.eventOccured(e);
+			}
+		});
+		promoteUsersBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				listener.eventOccured(e);
 			}
 		});
 	}
-	
+
 	public JButton getAddBookBtn() {
 		return addBookBtn;
 	}
@@ -98,7 +104,7 @@ public class ManagerPanel extends JPanel {
 	public JButton getViewReportsBtn() {
 		return viewReportsBtn;
 	}
-	
+
 	public JButton getSearchBtn() {
 		return searchBtn;
 	}

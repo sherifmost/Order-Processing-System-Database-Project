@@ -2,15 +2,10 @@ package view;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.EventObject;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTable;
-
 import controller.Controller;
 
 public class MainFrame extends JFrame {
@@ -24,6 +19,7 @@ public class MainFrame extends JFrame {
 	private UserPanel userPanel;
 	private EditInfoPanel infoPanel;
 	private SearchPanel searchPanel;
+	private PromotionPanel promotionPanel;
 	private static MainFrame uniqueInstance;
 	private static JPanel cards;
 	// constants
@@ -39,8 +35,9 @@ public class MainFrame extends JFrame {
 		newBookPanel = new NewBookPanel();
 		userPanel = new UserPanel();
 		searchPanel = new SearchPanel();
+		promotionPanel = new PromotionPanel();
 		cards = new JPanel(new CardLayout());
-				
+
 		loginPanel.setListener(new Listener() {
 			@Override
 			public void eventOccurred(SwitchEvent e) {
@@ -91,6 +88,9 @@ public class MainFrame extends JFrame {
 				} else if (e.getSource() == managerPanel.getSearchBtn()) {
 					CardLayout cl = (CardLayout) cards.getLayout();
 					cl.show(cards, "SEARCH");
+				} else if (e.getSource() == managerPanel.getPromoteUsersBtn()) {
+					CardLayout cl = (CardLayout) cards.getLayout();
+					cl.show(cards, "PROMOTE");
 				}
 			}
 		});
@@ -102,25 +102,25 @@ public class MainFrame extends JFrame {
 					cl.show(cards, "PUBLISHER");
 				}
 			}
-			
+
 			@Override
 			public void eventOccured(BookEvent e) {
 				controller.addBook(e);
 			}
 		});
-		
+
 		searchPanel.setListener(new Listener() {
 			@Override
 			public void eventOccured(SearchEvent e) {
 				searchPanel.getTablePanel().setData(controller.searchBooks(e));
 				searchPanel.getTablePanel().refresh();
 			}
-			
+
 			@Override
 			public void eventOccured(AddToCartEvent e) {
 				controller.addBookToCart(e);
 			}
-			
+
 		});
 		userPanel.setListener(new Listener() {
 			@Override
@@ -144,8 +144,24 @@ public class MainFrame extends JFrame {
 				}
 			}
 		});
-		
-		
+		promotionPanel.setListener(new Listener() {
+			@Override
+			public void eventOccured(EventObject e) {
+				if (e.getSource() == promotionPanel.getBackBtn()) {
+					CardLayout cl = (CardLayout) cards.getLayout();
+					cl.show(cards, "MANAGER");
+				}
+			}
+
+			@Override
+			public void eventOccured(PromotionEvent e) {
+				if (!controller.promoteUser(e)) {
+					promotionPanel.getErrorLabel().setText("User is already a manager");
+				} else {
+					promotionPanel.getErrorLabel().setText("Promoted successfully");
+				}
+			}
+		});
 		controller.connectToDB();
 		setMinimumSize(new Dimension(1000, 700));
 		setVisible(true);
@@ -157,6 +173,7 @@ public class MainFrame extends JFrame {
 		cards.add(newBookPanel, "NEWBOOK");
 		cards.add(userPanel, "USER");
 		cards.add(searchPanel, "SEARCH");
+		cards.add(promotionPanel, "PROMOTE");
 		this.add(cards);
 	}
 
@@ -182,5 +199,5 @@ public class MainFrame extends JFrame {
 		}
 		return uniqueInstance;
 	}
-	
+
 }
