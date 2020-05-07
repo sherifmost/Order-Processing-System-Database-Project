@@ -14,8 +14,8 @@ import view.PromotionEvent;
 import view.UpdateDataEvent;
 
 public class Database {
+	private static UserRegistrationInfo loggedInUser;
 	private static Connection connection;
-	private static User loggedInUser;
 
 	public void createConnection() {
 		try {
@@ -43,7 +43,7 @@ public class Database {
 
 	// we can change the return type to boolean to return false in case of existing
 	// email
-	public void signUpNewUser(User user) {
+	public void signUpNewUser(UserRegistrationInfo user) {
 		if (isDuplicateUser(user.getUserName(), user.getEmail())) {
 			System.out.println("This username or email already exists!");
 			return;
@@ -68,7 +68,8 @@ public class Database {
 	}
 
 	public void signUpSuperUser() {
-		User sudo = new User("root", "root", "root", "root@alexu.edu.eg", "password", "FOE - Shatby", "07775000");
+		UserRegistrationInfo sudo = new UserRegistrationInfo("root", "root", "root", "root@alexu.edu.eg", "password",
+				"FOE - Shatby", "07775000");
 		sudo.setManager();
 		if (!isDuplicateUser(sudo.getUserName(), sudo.getEmail())) {
 			signUpNewUser(sudo);
@@ -275,14 +276,15 @@ public class Database {
 	// Function to fill in the logged in user data
 	private void fillInUser(String userName, String firstName, String lastName, String email, String password,
 			String shippingAddress, String phone, boolean isManager) {
-		setLoggedInUser(new User(userName, firstName, lastName, email, password, shippingAddress, phone, isManager));
+		setLoggedInUser(new UserRegistrationInfo(userName, firstName, lastName, email, password, shippingAddress, phone,
+				isManager));
 	}
 
-	public static User getLoggedInUser() {
+	public static UserRegistrationInfo getLoggedInUser() {
 		return loggedInUser;
 	}
 
-	public static void setLoggedInUser(User loggedInUser) {
+	public static void setLoggedInUser(UserRegistrationInfo loggedInUser) {
 		Database.loggedInUser = loggedInUser;
 	}
 
@@ -339,6 +341,16 @@ public class Database {
 		}
 
 		return booksList;
+	}
+
+	public boolean checkout(ArrayList<Book> books, ArrayList<Integer> quantities) {
+		boolean checkoutCompleted = false;
+
+		// check if enough books exist
+		// then update the database and return true
+		// else return false
+
+		return checkoutCompleted;
 	}
 
 	// Promoting the user

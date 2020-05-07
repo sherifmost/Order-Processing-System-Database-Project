@@ -3,10 +3,13 @@ package controller;
 import java.util.ArrayList;
 
 import model.Book;
+import model.Cart;
 import model.Database;
 import model.Publisher;
 import model.SearchQuery;
 import model.User;
+import model.UserRegistrationInfo;
+import view.AddToCartEvent;
 import view.BookEvent;
 import view.LoginEvent;
 import view.PromotionEvent;
@@ -17,13 +20,14 @@ import view.UpdateDataEvent;
 
 public class Controller {
 	Database db;
-	User user;
+	UserRegistrationInfo userInfo;
 	Publisher publisher;
 	Book book;
+	User user;
 
 	public Controller() {
 		db = new Database();
-		user = new User();
+		userInfo = new UserRegistrationInfo();
 		publisher = new Publisher();
 		book = new Book();
 	}
@@ -34,14 +38,14 @@ public class Controller {
 	}
 
 	public void registerUser(SignUpEvent e) {
-		user.setUserName(e.getUsername());
-		user.setFirstName(e.getFirstName());
-		user.setLastName(e.getLastName());
-		user.setEmail(e.getEmail());
-		user.setPassword(e.getPassword());
-		user.setShippingAddress(e.getShippingAddress());
-		user.setPhone(e.getPhone());
-		db.signUpNewUser(user);
+		userInfo.setUserName(e.getUsername());
+		userInfo.setFirstName(e.getFirstName());
+		userInfo.setLastName(e.getLastName());
+		userInfo.setEmail(e.getEmail());
+		userInfo.setPassword(e.getPassword());
+		userInfo.setShippingAddress(e.getShippingAddress());
+		userInfo.setPhone(e.getPhone());
+		db.signUpNewUser(userInfo);
 	}
 
 	public void addPublisher(PublisherEvent e) {
@@ -64,6 +68,7 @@ public class Controller {
 	}
 
 	public String logIn(LoginEvent e) {
+		user = new User(e.getUsername(), e.isManager());
 		return db.signIn(e.getUsername(), e.getPassword(), e.isManager());
 	}
 
@@ -87,6 +92,21 @@ public class Controller {
 
 	public boolean updateUserData(UpdateDataEvent e) {
 		return db.updateUser(e);
+	}
+
+	public void addBookToCart(AddToCartEvent e) {
+		Cart cart = user.getCart();
+		Book book = new Book();
+		book.setISBN(e.getBookISBN());
+		cart.addBookToCart(book, e.getQuantity());
+	}
+
+	public boolean checkout() {
+		return db.checkout(user.getCart().getSelectedBooks(), user.getCart().getQuantities());
+	}
+
+	public boolean isManager() {
+		return user.isManager();
 	}
 
 	public boolean promoteUser(PromotionEvent e) {

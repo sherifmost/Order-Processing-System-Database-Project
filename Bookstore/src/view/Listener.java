@@ -36,6 +36,10 @@ public abstract class Listener implements EventListener {
 
 	}
 
+	public void eventOccured(AddToCartEvent e) {
+
+	}
+
 	public void eventOccured(PromotionEvent e) {
 
 	}
