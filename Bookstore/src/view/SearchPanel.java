@@ -116,7 +116,6 @@ public class SearchPanel extends JPanel {
 		gc.gridy = 1;
 		gc.gridx = 0;
 		gc.gridwidth = 1;
-		
 
 		add(bookTitleLabel, gc);
 		gc.gridy = 1;
@@ -237,20 +236,26 @@ public class SearchPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// we need to check that the entered value is integer
-				int quantity = Integer.parseInt(quantityField.getText());
-				
+				int quantity = 0;
+				try {
+					quantity = Integer.parseInt(quantityField.getText());
+
+				} catch (NumberFormatException nfe) {
+					JOptionPane.showMessageDialog(null, "Please enter a quantity !", "Invalid Operation",
+							JOptionPane.ERROR_MESSAGE);
+				}
 				if (quantity <= availableQuantity) {
-					listener.eventOccured(new BookEvent(this, selectedISBN, selectedTitle, selectedPublisher, selectedPrice,
-							selectedCategory, availableQuantity, quantity));
+					listener.eventOccured(new BookEvent(this, selectedISBN, selectedTitle, selectedPublisher,
+							selectedPrice, selectedCategory, availableQuantity, quantity));
 				} else {
 					JOptionPane.showMessageDialog(null, "we cannot support this amount of books !", "Invalid Operation",
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
-		
 
 		tablePanel.getTable().addMouseListener(new MouseAdapter() {
+
 			public void mousePressed(MouseEvent e) {
 				JTable table = tablePanel.getTable();
 				TableModel tableModel = tablePanel.getTableModel();
@@ -262,10 +267,11 @@ public class SearchPanel extends JPanel {
 				availableQuantity = (int) tableModel.getValueAt(row, 3);
 				selectedPublisher = (String) tableModel.getValueAt(row, 4);
 				selectedPrice = (int) tableModel.getValueAt(row, 5);
-				
+
 				selectedBookLabel.setText(selectedTitle + "  -- ISBN: " + selectedISBN);
 
 			}
+
 		});
 
 	}
