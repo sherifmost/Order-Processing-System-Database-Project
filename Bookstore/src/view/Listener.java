@@ -33,5 +33,11 @@ public abstract class Listener implements EventListener {
 	public void eventOccured(SearchEvent e) {
 		
 	}
+	public void eventOccured(OrderEvent e) {
+		
+	}
+	public void eventOccured(ConfirmEvent e) {
+		
+	}
 	
 }

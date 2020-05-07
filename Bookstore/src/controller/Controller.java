@@ -1,14 +1,17 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import model.Book;
 import model.Database;
+import model.Order;
 import model.Publisher;
 import model.SearchQuery;
 import model.User;
 import view.BookEvent;
 import view.LoginEvent;
+import view.OrderEvent;
 import view.PublisherEvent;
 import view.SearchEvent;
 import view.SignUpEvent;
@@ -19,6 +22,7 @@ public class Controller {
 	User user;
 	Publisher publisher;
 	Book book;
+	Order order;
 	
 	public Controller() {
 		db = new Database();
@@ -83,8 +87,27 @@ public class Controller {
 		}
 		return results;
 	}
+	
+	public ArrayList<OrderEvent> searchOrders() {
+		ArrayList<OrderEvent> results = new ArrayList<>();
+		ArrayList<Order> orderResults = db.searchOrders();
+		HashMap<Integer, String> title = db.findOrdersBookTitles();
+		for (Order order : orderResults) {
+			results.add(new OrderEvent(this, order.getISBN(), order.getQuantity(),
+					title.get(order.getISBN())));
+		}
+		return results;
+	}
+	
+	public void placeOrder(OrderEvent e) {
+		db.placeOrder(new Order(e.getISBN(), e.getQuantity()));
+	}
 
 	public boolean updateUserData(UpdateDataEvent e) {
 		return db.updateUser(e);
+	}
+	
+	public void confirmOrders(ArrayList<Integer> orders) {
+		db.confirmOrders(orders);
 	}
 }

@@ -21,6 +21,8 @@ public class MainFrame extends JFrame {
 	private UserPanel userPanel;
 	private EditInfoPanel infoPanel;
 	private SearchPanel searchPanel;
+	private PlaceOrderPanel placeOrderPanel;
+	private ConfirmOrdersPanel confirmOrdersPanel;
 	private static MainFrame uniqueInstance;
 	private static JPanel cards;
 	// constants
@@ -36,6 +38,8 @@ public class MainFrame extends JFrame {
 		newBookPanel = new NewBookPanel();
 		userPanel = new UserPanel();
 		searchPanel = new SearchPanel();
+		placeOrderPanel = new PlaceOrderPanel();
+		confirmOrdersPanel = new ConfirmOrdersPanel();
 		cards = new JPanel(new CardLayout());
 		loginPanel.setListener(new Listener() {
 			@Override
@@ -86,6 +90,14 @@ public class MainFrame extends JFrame {
 				} else if (e.getSource() == managerPanel.getSearchBtn()) {
 					CardLayout cl = (CardLayout) cards.getLayout();
 					cl.show(cards, "SEARCH");
+				} else if (e.getSource() == managerPanel.getPlaceOrderBtn()) {
+					CardLayout cl = (CardLayout) cards.getLayout();
+					cl.show(cards, "ORDER");
+				} else if (e.getSource() == managerPanel.getConfirmOrderBtn()) {
+					confirmOrdersPanel.setData(controller.searchOrders());
+					CardLayout cl = (CardLayout) cards.getLayout();
+					cl.show(cards, "CONFIRM");
+					confirmOrdersPanel.refresh();
 				}
 			}
 		});
@@ -132,6 +144,20 @@ public class MainFrame extends JFrame {
 				}
 			}
 		});
+		placeOrderPanel.setListener(new Listener() {
+			@Override
+			public void eventOccured(OrderEvent e) {
+				controller.placeOrder(e);
+			}
+		});
+		confirmOrdersPanel.setListener(new Listener() {
+			@Override
+			public void eventOccured(ConfirmEvent e) {
+				controller.confirmOrders(e.getOrders());
+				confirmOrdersPanel.setData(controller.searchOrders());
+				confirmOrdersPanel.refresh();
+			}
+		});
 		controller.connectToDB();
 		setMinimumSize(new Dimension(1000, 700));
 		setVisible(true);
@@ -143,6 +169,8 @@ public class MainFrame extends JFrame {
 		cards.add(newBookPanel, "NEWBOOK");
 		cards.add(userPanel, "USER");
 		cards.add(searchPanel, "SEARCH");
+		cards.add(placeOrderPanel, "ORDER");
+		cards.add(confirmOrdersPanel, "CONFIRM");
 		this.add(cards);
 	}
 
