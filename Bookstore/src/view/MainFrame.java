@@ -2,11 +2,14 @@ package view;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 
 import controller.Controller;
 
@@ -37,6 +40,7 @@ public class MainFrame extends JFrame {
 		userPanel = new UserPanel();
 		searchPanel = new SearchPanel();
 		cards = new JPanel(new CardLayout());
+				
 		loginPanel.setListener(new Listener() {
 			@Override
 			public void eventOccurred(SwitchEvent e) {
@@ -47,6 +51,7 @@ public class MainFrame extends JFrame {
 			@Override
 			public void eventOccurred(LoginEvent e) {
 				String errorMsg = controller.logIn(e);
+				searchPanel.setManager(controller.isManager());
 				if (errorMsg.equals("NoError")) {
 					CardLayout cl = (CardLayout) cards.getLayout();
 					if (e.isManager()) {
@@ -110,6 +115,12 @@ public class MainFrame extends JFrame {
 				searchPanel.getTablePanel().setData(controller.searchBooks(e));
 				searchPanel.getTablePanel().refresh();
 			}
+			
+			@Override
+			public void eventOccured(AddToCartEvent e) {
+				controller.addBookToCart(e);
+			}
+			
 		});
 		userPanel.setListener(new Listener() {
 			@Override
@@ -119,7 +130,8 @@ public class MainFrame extends JFrame {
 					CardLayout cl = (CardLayout) cards.getLayout();
 					cl.show(cards, editInfoName);
 				} else if (e.getSource() == userPanel.getSearchForBookBtn()) {
-
+					CardLayout cl = (CardLayout) cards.getLayout();
+					cl.show(cards, "SEARCH");
 				} else if (e.getSource() == userPanel.getAddToCartBtn()) {
 
 				} else if (e.getSource() == userPanel.getManageCartBtn()) {
@@ -132,6 +144,8 @@ public class MainFrame extends JFrame {
 				}
 			}
 		});
+		
+		
 		controller.connectToDB();
 		setMinimumSize(new Dimension(1000, 700));
 		setVisible(true);

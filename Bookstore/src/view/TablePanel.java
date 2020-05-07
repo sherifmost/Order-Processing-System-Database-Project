@@ -1,6 +1,8 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.JScrollPane;
@@ -17,6 +19,10 @@ public class TablePanel extends JTable {
 		table = new JTable(tableModel);
 		setLayout(new BorderLayout());
 		add(new JScrollPane(table), BorderLayout.CENTER);
+		
+		table.addMouseListener(new MouseAdapter() {
+			
+		});
 	}
 	
 	public void setData(ArrayList<BookEvent> tableData) {
@@ -26,5 +32,17 @@ public class TablePanel extends JTable {
 	public void refresh() {
 		tableModel.fireTableDataChanged();
 	}
+	
+	public JTable getTable() {
+		return table;
+	}
+	
+	public TableModel getTableModel() {
+		return tableModel;
+	}
+	
+	
+	
+	
 
 }

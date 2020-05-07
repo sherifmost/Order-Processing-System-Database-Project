@@ -5,6 +5,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Enumeration;
 
 import javax.swing.AbstractButton;
@@ -15,7 +17,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
+
 import utils.Category;
 
 public class SearchPanel extends JPanel {
@@ -25,14 +31,17 @@ public class SearchPanel extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JLabel searchLabel, bookTitleLabel, filtersLabel, categoryLabel, publisherNameLabel, priceRangeLabel, yearRangeLabel;
-	private JLabel toPriceLabel, toYearLable;
-	private JTextField titleField, publisherNameField, lowerPrice, upperPrice;
+	private JLabel toPriceLabel, toYearLable, selectedBookLabel, quantityLabel;
+	private JTextField titleField, publisherNameField, lowerPrice, upperPrice, quantityField;
 	private ButtonGroup categoryGroup;
 	private JRadioButton scienceBtn, artBtn, religionBtn, historyBtn, geographyBtn;
 	private JComboBox<String> fromYearComboBox, toYearComboBox;
-	private JButton searchBtn;
+	private JButton searchBtn, modifyBtn, addToCartBtn;
 	private Listener listener;
 	private TablePanel tablePanel;
+	private boolean isManager;
+	
+	private int selectedISBN, availableQuantity;
 	
 	public SearchPanel() {
 		// labels
@@ -45,12 +54,16 @@ public class SearchPanel extends JPanel {
 		yearRangeLabel = new JLabel("Year Range");
 		toPriceLabel = new JLabel("TO");
 		toYearLable = new JLabel("TO");
+		selectedBookLabel = new JLabel("No selected Book !");
+		quantityLabel = new JLabel("select quantity:");
+
 		
 		// text fields
 		titleField = new JTextField(30);
 		publisherNameField = new JTextField(20);
 		lowerPrice = new JTextField(6);
 		upperPrice = new JTextField(6);
+		quantityField = new JTextField(2);
 		
 		// radio buttons
 		scienceBtn = new JRadioButton("Science");
@@ -78,6 +91,8 @@ public class SearchPanel extends JPanel {
 		
 		// button
 		searchBtn = new JButton("SEARCH");
+		modifyBtn = new JButton("Modify Book");
+		addToCartBtn = new JButton("Add To Cart");
 		
 		// table
 		tablePanel = new TablePanel();
@@ -165,7 +180,6 @@ public class SearchPanel extends JPanel {
 		gc.gridwidth = 4;
 		gc.ipady = 100;
 		add(tablePanel, gc);
-
 	
 		// search button action
 		searchBtn.addActionListener(new ActionListener() {
@@ -181,10 +195,67 @@ public class SearchPanel extends JPanel {
 				listener.eventOccured(new SearchEvent(this, titleField.getText(), Enum.valueOf(Category.class,
 						getSelectedButtonText(categoryGroup).toUpperCase()), publisherNameField.getText(),
 						lowerP, upperP, from, to));
+				
+				gc.gridx = 0;
+				gc.gridy++;
+				add(selectedBookLabel, gc);
+				gc.gridx = 2;
+				gc.fill = GridBagConstraints.HORIZONTAL;
+				gc.ipady = 30;
+				gc.ipadx = 60;
+				if (isManager) {
+						add(modifyBtn, gc);
+					}
+					else {
+						add(addToCartBtn, gc);
+						gc.gridy++;
+						gc.gridx = 0;
+						add(quantityLabel, gc);
+						gc.gridx = 1;
+						gc.ipady = 20;
+						gc.ipadx = 20;
+						add(quantityField, gc);
+					}
+				
 				} else {
 					JOptionPane.showMessageDialog(null, errorMsg, "Invalid search input",
 							JOptionPane.ERROR_MESSAGE);
 				}
+			}
+		});
+		
+		modifyBtn.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
+		
+		addToCartBtn.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// we need to check that the entered value is integer
+				int quantity = Integer.parseInt(quantityField.getText());
+				if (quantity <= availableQuantity) {
+					listener.eventOccured(new AddToCartEvent(this, selectedISBN, quantity));
+				} else {
+					JOptionPane.showMessageDialog(null, "we cannot support this amount of books !", "Invalid Operation",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		
+		tablePanel.getTable().addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				JTable table = tablePanel.getTable();
+				TableModel tableModel = tablePanel.getTableModel();
+				int row = table.rowAtPoint(e.getPoint());
+				table.getSelectionModel().setSelectionInterval(row, row);
+				String bookTitle = (String) tableModel.getValueAt(row, 0);
+				selectedISBN = (int) tableModel.getValueAt(row, 1);
+				availableQuantity = (int) tableModel.getValueAt(row, 3);
+				selectedBookLabel.setText(bookTitle + "  -- ISBN: " + selectedISBN);
+				
 			}
 		});
 		
@@ -226,6 +297,16 @@ public class SearchPanel extends JPanel {
 		
 		return errorMsg;
 	}
+
+	public boolean isManager() {
+		return isManager;
+	}
+
+	public void setManager(boolean isManager) {
+		this.isManager = isManager;
+	}
+	
+	
 	
 	
 }
