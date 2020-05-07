@@ -12,6 +12,7 @@ public class TableModel extends AbstractTableModel {
 	 */
 	private static final long serialVersionUID = 1L;
 	private ArrayList<BookEvent> tableData;
+	private String[] columnsName = {"Title", "ISBN", "Category", "Available Quantity", "Publisher", "Price"};
 	
 	public TableModel() {
 		tableData = new ArrayList<BookEvent>();
@@ -20,6 +21,12 @@ public class TableModel extends AbstractTableModel {
 	public void setData(ArrayList<BookEvent> tableData) {
 		this.tableData = tableData;
 	}
+	
+	@Override
+	public String getColumnName(int column) {
+		return columnsName[column];
+	}
+	
 	@Override
 	public int getColumnCount() {
 		return 6;
