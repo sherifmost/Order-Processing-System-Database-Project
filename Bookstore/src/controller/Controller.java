@@ -43,11 +43,11 @@ public class Controller {
 		db.signUpNewUser(user);
 	}
 
-	public void addPublisher(PublisherEvent e) {
+	public boolean addPublisher(PublisherEvent e) {
 		publisher.setAddress(e.getPublisherAddress());
 		publisher.setPublisherName(e.getPubisherName());
 		publisher.setTelephone(e.getPublihserTelephone());
-		db.addNewPublisher(publisher);
+		return db.addNewPublisher(publisher);
 	}
 
 	public void addBook(BookEvent e) {
@@ -103,11 +103,10 @@ public class Controller {
 		return db.checkout();
 	}
 
-
 	public boolean promoteUser(PromotionEvent e) {
 		return db.promoteUser(e);
 	}
-	
+
 	public boolean isManager() {
 		return db.isManager();
 	}

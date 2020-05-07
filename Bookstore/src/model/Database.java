@@ -68,8 +68,7 @@ public class Database {
 	}
 
 	public void signUpSuperUser() {
-		User sudo = new User("root", "root", "root", "root@alexu.edu.eg", "password",
-				"FOE - Shatby", "07775000");
+		User sudo = new User("root", "root", "root", "root@alexu.edu.eg", "password", "FOE - Shatby", "07775000");
 		sudo.setManager();
 		if (!isDuplicateUser(sudo.getUserName(), sudo.getEmail())) {
 			signUpNewUser(sudo);
@@ -140,10 +139,9 @@ public class Database {
 	}
 
 	// methods to add a publisher to the database
-	public void addNewPublisher(Publisher publisher) {
+	public boolean addNewPublisher(Publisher publisher) {
 		if (isDuplicatePublisher(publisher)) {
-			System.out.println("This publisher already exists!");
-			return;
+			return false;
 		}
 		try {
 			Statement statement = connection.createStatement();
@@ -154,6 +152,7 @@ public class Database {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return true;
 
 	}
 
@@ -277,8 +276,8 @@ public class Database {
 	private void fillInUser(String userName, String firstName, String lastName, String email, String password,
 			String shippingAddress, String phone, boolean isManager) {
 		Cart cart = new Cart();
-		setLoggedInUser(new User(userName, firstName, lastName, email, password, shippingAddress, phone,
-				isManager, cart));
+		setLoggedInUser(
+				new User(userName, firstName, lastName, email, password, shippingAddress, phone, isManager, cart));
 	}
 
 	public static User getLoggedInUser() {
@@ -288,7 +287,7 @@ public class Database {
 	public static void setLoggedInUser(User loggedInUser) {
 		Database.loggedInUser = loggedInUser;
 	}
-	
+
 	public boolean isManager() {
 		return loggedInUser.isManager();
 	}
@@ -347,7 +346,7 @@ public class Database {
 
 		return booksList;
 	}
-	
+
 	public void addBookToCart(Book book, int quantity) {
 		Cart cart = loggedInUser.getCart();
 		cart.addBookToCart(book, quantity);

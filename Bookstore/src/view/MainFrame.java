@@ -73,9 +73,12 @@ public class MainFrame extends JFrame {
 		publisherPanel.setListener(new Listener() {
 			@Override
 			public void eventOccurred(PublisherEvent e) {
-				controller.addPublisher(e);
-				CardLayout cl = (CardLayout) cards.getLayout();
-				cl.show(cards, "NEWBOOK");
+				if (controller.addPublisher(e)) {
+					CardLayout cl = (CardLayout) cards.getLayout();
+					cl.show(cards, "NEWBOOK");
+				} else {
+					publisherPanel.getErrorLabel().setText("Publisher already exists.");
+				}
 			}
 		});
 
@@ -120,7 +123,6 @@ public class MainFrame extends JFrame {
 			public void eventOccured(BookEvent e) {
 				controller.addBookToCart(e);
 			}
-			
 
 		});
 		userPanel.setListener(new Listener() {
