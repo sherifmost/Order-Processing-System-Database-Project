@@ -206,6 +206,21 @@ public class MainFrame extends JFrame {
 				CardLayout cl = (CardLayout) cards.getLayout();
 				cl.show(cards, "USER");
 			}
+
+			@Override
+			public void eventOccurred(CheckoutEvent e) {
+				String error = controller.checkout();
+				if (error.length() != 0) {
+					// Handle the error here
+					checkoutPanel.getErrorLabel().setText(error);
+				} else {
+					// show a success message and refresh the cart
+					checkoutPanel.getErrorLabel().setText("Congratulations! Transaction successful.");
+					controller.clearCart();
+					checkoutPanel.getBooksInCartPanel().setData(controller.getCart().getSelectedBooks());
+					checkoutPanel.getBooksInCartPanel().refresh();
+				}
+			}
 		});
 		cards.add(checkoutPanel, "CHECKOUT");
 	}

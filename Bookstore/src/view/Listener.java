@@ -40,4 +40,7 @@ public abstract class Listener implements EventListener {
 
 	}
 
+	public void eventOccurred(CheckoutEvent e) {
+
+	}
 }

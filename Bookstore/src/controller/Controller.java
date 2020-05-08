@@ -104,7 +104,7 @@ public class Controller {
 		Database.getLoggedInUser().setCart(new Cart());
 	}
 
-	public boolean checkout() {
+	public String checkout() {
 		return db.checkout();
 	}
 
@@ -114,5 +114,9 @@ public class Controller {
 
 	public boolean isManager() {
 		return db.isManager();
+	}
+
+	public Cart getCart() {
+		return Database.getLoggedInUser().getCart();
 	}
 }

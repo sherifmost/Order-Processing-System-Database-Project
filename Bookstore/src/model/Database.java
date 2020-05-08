@@ -16,6 +16,11 @@ import view.UpdateDataEvent;
 public class Database {
 	private static User loggedInUser;
 	private static Connection connection;
+	private String startTransactionQuery = "START TRANSACTION;";
+	private String disableAutoCommit = "SET AUTOCOMMIT = 0;";
+	private String enableAutoCommit = "SET AUTOCOMMIT = 1;";
+	private String commit = "COMMIT;";
+	private String rollBack = "ROLLBACK;";
 
 	public void createConnection() {
 		try {
@@ -353,16 +358,42 @@ public class Database {
 		cart.showCart();
 	}
 
-	public boolean checkout() {
+	public String checkout() {
+		String error = "";
 		ArrayList<Book> books = loggedInUser.getCart().getSelectedBooks();
 		ArrayList<Integer> quantities = loggedInUser.getCart().getQuantities();
-		boolean checkoutCompleted = false;
-		
-		// check if enough books exist
-		// then update the database and return true
-		// else return false
 
-		return checkoutCompleted;
+		try {
+			Statement statement = connection.createStatement();
+			// starting a transaction for checkout
+			statement.execute(startTransactionQuery);
+			// Removing auto increment to be able to perform commit and roll back.
+			statement.execute(disableAutoCommit);
+			// performing the update queries
+			for (int i = 0; i < books.size(); i++) {
+				Book currentBook = books.get(i);
+				int quantity = quantities.get(i);
+				int ISBN = currentBook.getISBN();
+				try {
+					statement.execute("UPDATE book SET copies = copies - " + quantity + " WHERE ISBN = " + ISBN + ";");
+				} catch (SQLException ex) {
+					error = "Unfortunately transaction failed, " + currentBook.getTitle()
+							+ " doesn't have enough copies in stock.";
+					// performing roll back when an error occurs
+					statement.execute(rollBack);
+					statement.execute(enableAutoCommit);
+					statement.close();
+					return error;
+				}
+			}
+			// performing commit if all updates completed successfully
+			statement.execute(commit);
+			statement.execute(enableAutoCommit);
+			statement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
 
 	// Promoting the user

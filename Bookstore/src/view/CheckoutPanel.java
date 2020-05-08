@@ -161,6 +161,7 @@ public class CheckoutPanel extends JPanel {
 						} else {
 							errorLabel.setText("");
 							// TO DO: perform the update transaction to checkout the cart
+							listener.eventOccurred(new CheckoutEvent(this));
 						}
 					} catch (ParseException e1) {
 						errorLabel.setText("Please enter an expire date in form: yyy-MM-dd");
@@ -180,6 +181,10 @@ public class CheckoutPanel extends JPanel {
 
 	public CartTablePanel getBooksInCartPanel() {
 		return booksInCartPanel;
+	}
+
+	public JLabel getErrorLabel() {
+		return errorLabel;
 	}
 
 	private static final long serialVersionUID = 4097556501562960076L;
