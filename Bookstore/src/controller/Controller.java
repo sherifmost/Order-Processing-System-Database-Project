@@ -86,7 +86,15 @@ public class Controller {
 	}
 
 	public boolean updateUserData(UpdateDataEvent e) {
-		return db.updateUser(e);
+		User user = new User();
+		user.setUserName(e.getUsername());
+		user.setFirstName(e.getFirstName());
+		user.setLastName(e.getLastName());
+		user.setPassword(e.getPassword());
+		user.setEmail(e.getEmail());
+		user.setPhone(e.getPhone());
+		user.setShippingAddress(e.getShippingAddress());
+		return db.updateUser(user);
 	}
 
 	public void addBookToCart(BookEvent e) {
@@ -109,7 +117,7 @@ public class Controller {
 	}
 
 	public boolean promoteUser(PromotionEvent e) {
-		return db.promoteUser(e);
+		return db.promoteUser(e.getUserName());
 	}
 
 	public boolean isManager() {

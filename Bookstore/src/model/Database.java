@@ -7,11 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
 import utils.Category;
 import utils.MetaData;
-import view.PromotionEvent;
-import view.UpdateDataEvent;
 
 public class Database {
 	private static User loggedInUser;
@@ -186,8 +183,8 @@ public class Database {
 	}
 
 	// This function is to update the user info
-	public boolean updateUser(UpdateDataEvent e) {
-		String userName = e.getUsername();
+	public boolean updateUser(User e) {
+		String userName = e.getUserName();
 		String firstaName = e.getFirstName();
 		String lastName = e.getLastName();
 		String password = e.getPassword();
@@ -397,8 +394,7 @@ public class Database {
 	}
 
 	// Promoting the user
-	public boolean promoteUser(PromotionEvent e) {
-		String userName = e.getUserName();
+	public boolean promoteUser(String userName) {
 		try {
 			Statement statement = connection.createStatement();
 			ResultSet rs = statement.executeQuery(

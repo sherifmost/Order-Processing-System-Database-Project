@@ -9,9 +9,6 @@ import model.Database;
 
 public class CartTableModel extends AbstractTableModel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7064428593063487905L;
 	private ArrayList<Book> books;
 	private Cart cart = Database.getLoggedInUser().getCart();
