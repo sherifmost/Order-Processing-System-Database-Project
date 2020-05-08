@@ -20,6 +20,7 @@ public class MainFrame extends JFrame {
 	private EditInfoPanel infoPanel;
 	private SearchPanel searchPanel;
 	private PromotionPanel promotionPanel;
+	private CheckoutPanel checkoutPanel;
 	private static MainFrame uniqueInstance;
 	private static JPanel cards;
 	// constants
@@ -36,6 +37,7 @@ public class MainFrame extends JFrame {
 		userPanel = new UserPanel();
 		searchPanel = new SearchPanel();
 		promotionPanel = new PromotionPanel();
+
 		cards = new JPanel(new CardLayout());
 
 		loginPanel.setListener(new Listener() {
@@ -124,6 +126,17 @@ public class MainFrame extends JFrame {
 				controller.addBookToCart(e);
 			}
 
+			@Override
+			public void eventOccurred(SwitchEvent e) {
+				if (controller.isManager()) {
+					CardLayout cl = (CardLayout) cards.getLayout();
+					cl.show(cards, "MANAGER");
+				} else {
+					CardLayout cl = (CardLayout) cards.getLayout();
+					cl.show(cards, "USER");
+				}
+			}
+
 		});
 		userPanel.setListener(new Listener() {
 			@Override
@@ -140,8 +153,12 @@ public class MainFrame extends JFrame {
 				} else if (e.getSource() == userPanel.getManageCartBtn()) {
 
 				} else if (e.getSource() == userPanel.getCheckOutCartBtn()) {
-
+					initializeCartInfo();
+					CardLayout cl = (CardLayout) cards.getLayout();
+					cl.show(cards, "CHECKOUT");
 				} else if (e.getSource() == userPanel.getLogOutBtn()) {
+					// Clearing the cart
+					controller.clearCart();
 					CardLayout cl = (CardLayout) cards.getLayout();
 					cl.show(cards, "LOGIN");
 				}
@@ -177,7 +194,20 @@ public class MainFrame extends JFrame {
 		cards.add(userPanel, "USER");
 		cards.add(searchPanel, "SEARCH");
 		cards.add(promotionPanel, "PROMOTE");
+
 		this.add(cards);
+	}
+
+	private void initializeCartInfo() {
+		checkoutPanel = new CheckoutPanel();
+		checkoutPanel.setListener(new Listener() {
+			@Override
+			public void eventOccurred(SwitchEvent e) {
+				CardLayout cl = (CardLayout) cards.getLayout();
+				cl.show(cards, "USER");
+			}
+		});
+		cards.add(checkoutPanel, "CHECKOUT");
 	}
 
 	private void initializeUserInfo() {

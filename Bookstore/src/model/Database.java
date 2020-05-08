@@ -357,7 +357,7 @@ public class Database {
 		ArrayList<Book> books = loggedInUser.getCart().getSelectedBooks();
 		ArrayList<Integer> quantities = loggedInUser.getCart().getQuantities();
 		boolean checkoutCompleted = false;
-
+		
 		// check if enough books exist
 		// then update the database and return true
 		// else return false

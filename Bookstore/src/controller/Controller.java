@@ -3,6 +3,7 @@ package controller;
 import java.util.ArrayList;
 
 import model.Book;
+import model.Cart;
 import model.Database;
 import model.Publisher;
 import model.SearchQuery;
@@ -97,6 +98,10 @@ public class Controller {
 		book.setPublisherName(e.getPublisherName());
 		book.setTitle(e.getTitle());
 		db.addBookToCart(book, e.getQuantity());
+	}
+
+	public void clearCart() {
+		Database.getLoggedInUser().setCart(new Cart());
 	}
 
 	public boolean checkout() {

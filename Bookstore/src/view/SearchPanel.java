@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -35,7 +36,7 @@ public class SearchPanel extends JPanel {
 	private ButtonGroup categoryGroup;
 	private JRadioButton scienceBtn, artBtn, religionBtn, historyBtn, geographyBtn;
 	private JComboBox<String> fromYearComboBox, toYearComboBox;
-	private JButton searchBtn, modifyBtn, addToCartBtn;
+	private JButton searchBtn, modifyBtn, addToCartBtn, backBtn;
 	private Listener listener;
 	private TablePanel tablePanel;
 	private boolean isManager;
@@ -94,6 +95,7 @@ public class SearchPanel extends JPanel {
 		searchBtn = new JButton("SEARCH");
 		modifyBtn = new JButton("Modify Book");
 		addToCartBtn = new JButton("Add To Cart");
+		backBtn = new JButton("Back");
 
 		// table
 		tablePanel = new TablePanel();
@@ -178,12 +180,15 @@ public class SearchPanel extends JPanel {
 		gc.ipady = 30;
 		gc.fill = GridBagConstraints.HORIZONTAL;
 		add(searchBtn, gc);
+		gc.gridx = 2;
+		add(backBtn, gc);
 		gc.gridx = 0;
 		gc.gridy++;
 		gc.gridwidth = 4;
 		gc.ipady = 100;
 		add(tablePanel, gc);
-
+		// styling
+		backBtn.setBackground(Color.green);
 		// search button action
 		searchBtn.addActionListener(new ActionListener() {
 			@Override
@@ -231,7 +236,12 @@ public class SearchPanel extends JPanel {
 
 			}
 		});
-
+		backBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				listener.eventOccurred(new SwitchEvent(this));
+			}
+		});
 		addToCartBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
