@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import utils.Category;
 import utils.MetaData;
@@ -395,5 +396,71 @@ public class Database {
 		}
 
 		return true;
+	}
+	
+	public ArrayList<Order> searchOrders() {
+		ArrayList<Order> ordersList = new ArrayList<>();
+		try {
+			Statement statement = connection.createStatement();
+			String operation = "SELECT * FROM BOOK_ORDERS";
+			ResultSet rs = statement.executeQuery(operation);
+			while (rs.next()) {
+				Order order = new Order(rs.getInt(MetaData.ORDERS_ISBN), rs.getInt(MetaData.ORDERS_TOTAL));
+				ordersList.add(order);
+			}
+			statement.close();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return ordersList;
+	}
+	
+	public String placeOrder(Order order) {
+		String errorMsg = "";
+		try {
+			Statement statement = connection.createStatement();
+			String operation = "INSERT INTO BOOK_ORDERS VALUES('" + order.getISBN() + "', '" +
+			order.getQuantity()+ "')";
+			statement.execute(operation);
+			statement.close();
+		} catch (SQLException e) {
+			errorMsg = e.getLocalizedMessage();
+		}
+		return errorMsg;
+	}
+	
+	public HashMap<Integer, String> findOrdersBookTitles() {
+		HashMap<Integer, String> results = new HashMap<>();
+		try {
+			Statement statement = connection.createStatement();
+			String operation = "SELECT ISBN, Title FROM BOOK WHERE BOOK.ISBN IN (SElECT ISBN FROM BOOK_ORDERS)";
+			ResultSet rs = statement.executeQuery(operation);
+			while (rs.next()) {
+				results.put(rs.getInt(MetaData.BOOK_ISBN), rs.getString(MetaData.BOOK_TITLE));
+			}
+			statement.close();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return results;
+	}
+	
+	public void confirmOrders(ArrayList<Integer> orders) {
+		try {
+			Statement statement = connection.createStatement();
+			StringBuilder operation = new StringBuilder();
+			operation.append("DELETE FROM BOOK_ORDERS WHERE ISBN IN (");
+			for (int i = 0; i < orders.size(); i++) {
+				if (i != 0) {
+					operation.append(", ");
+				}
+				operation.append(orders.get(i));
+			}
+			operation.append(")");
+			statement.execute(operation.toString());
+			statement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

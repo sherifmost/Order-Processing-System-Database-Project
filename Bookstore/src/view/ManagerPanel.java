@@ -79,6 +79,20 @@ public class ManagerPanel extends JPanel {
 				listener.eventOccured(e);
 			}
 		});
+		
+		placeOrderBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				listener.eventOccured(e);
+			}
+		});
+		
+		confirmOrderBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				listener.eventOccured(e);
+			}
+		});
 	}
 
 	public JButton getAddBookBtn() {
