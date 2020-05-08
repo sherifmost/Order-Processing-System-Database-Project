@@ -18,10 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import model.Book;
-import model.Cart;
-import model.CreditCardChecker;
-import model.Database;
+import controller.Controller;
 import utils.CreditCardData;
 
 public class CheckoutPanel extends JPanel {
@@ -32,9 +29,7 @@ public class CheckoutPanel extends JPanel {
 	private CartTablePanel booksInCartPanel;
 	private JButton checkoutBtn, backBtn;
 	private Listener listener;
-	private ArrayList<Book> booksInCart = Database.getLoggedInUser().getCart().getSelectedBooks();
-	private Cart cart = Database.getLoggedInUser().getCart();
-	private CreditCardChecker checker = new CreditCardChecker();
+	private ArrayList<TableElement> booksInCart;
 	private SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	public CheckoutPanel() {
@@ -44,7 +39,7 @@ public class CheckoutPanel extends JPanel {
 		cardNumberLabel = new JLabel("Enter valid card number");
 		expireDateLabel = new JLabel("Expire Date");
 		errorLabel = new JLabel("");
-		totalLabel = new JLabel("Total: " + cart.getTotalSum() + "$");
+		totalLabel = new JLabel("Total: " + Controller.getTotalSum() + "$");
 		// text fields
 		cardNumberField = new JTextField(25);
 		expireDateField = new JTextField("yyyy-MM-dd");
@@ -76,9 +71,10 @@ public class CheckoutPanel extends JPanel {
 		backBtn = new JButton("Back");
 		// table
 		booksInCartPanel = new CartTablePanel();
+		booksInCart = Controller.getBooksInCart();
 		booksInCartPanel.setData(booksInCart);
 		// Handling the case where the user has nothing in his cart
-		if (cart.getSelectedBooks().size() == 0) {
+		if (booksInCart.size() == 0) {
 			checkoutBtn.setEnabled(false);
 			errorLabel.setText("Cart is empty!");
 		}
@@ -149,14 +145,12 @@ public class CheckoutPanel extends JPanel {
 		checkoutBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				checker.setCreditCardName(cardNameBox.getItemAt(cardNameBox.getSelectedIndex()));
-				checker.setCreditCardNumber(cardNumberField.getText());
-				if (!checker.validateNumber()) {
+				if (!Controller.validateCard(cardNameBox.getItemAt(cardNameBox.getSelectedIndex()),
+						cardNumberField.getText())) {
 					errorLabel.setText("Invalid credit card data");
 				} else
 					try {
-						checker.setExpireDate(sdFormat.parse(expireDateField.getText()));
-						if (!checker.validateDate()) {
+						if (!Controller.validateDate(sdFormat.parse(expireDateField.getText()))) {
 							errorLabel.setText("Credit card is expired");
 						} else {
 							errorLabel.setText("");

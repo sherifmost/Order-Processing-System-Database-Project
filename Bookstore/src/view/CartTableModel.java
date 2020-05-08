@@ -3,22 +3,18 @@ package view;
 import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
-import model.Book;
-import model.Cart;
-import model.Database;
 
 public class CartTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 7064428593063487905L;
-	private ArrayList<Book> books;
-	private Cart cart = Database.getLoggedInUser().getCart();
+	private ArrayList<TableElement> books;
 	private String[] columnsName = { "Book Title", "Price", "Quantity", "Total price" };
 
 	public CartTableModel() {
-		books = new ArrayList<Book>();
+		books = new ArrayList<TableElement>();
 	}
 
-	public void setData(ArrayList<Book> books) {
+	public void setData(ArrayList<TableElement> books) {
 		this.books = books;
 	}
 
@@ -39,22 +35,8 @@ public class CartTableModel extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(int row, int col) {
-		Book currentBook = books.get(row);
-		int currentQuantity = cart.getQuantities().get(row);
-		switch (col) {
-		// Title
-		case 0:
-			return currentBook.getTitle();
-		// price
-		case 1:
-			return currentBook.getPrice();
-		case 2:
-			return currentQuantity;
-		case 3:
-			return currentQuantity * currentBook.getPrice();
-		default:
+		if (books.get(row) == null)
 			return null;
-		}
+		return books.get(row).getData().get(col);
 	}
-
 }

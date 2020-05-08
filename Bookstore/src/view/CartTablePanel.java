@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import model.Book;
-
 public class CartTablePanel extends JTable {
 
 	// Creating a table for the checkout cart
@@ -21,7 +19,7 @@ public class CartTablePanel extends JTable {
 		add(new JScrollPane(table), BorderLayout.CENTER);
 	}
 
-	public void setData(ArrayList<Book> books) {
+	public void setData(ArrayList<TableElement> books) {
 		checkoutTableModel.setData(books);
 	}
 

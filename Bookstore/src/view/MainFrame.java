@@ -217,7 +217,7 @@ public class MainFrame extends JFrame {
 					// show a success message and refresh the cart
 					checkoutPanel.getErrorLabel().setText("Congratulations! Transaction successful.");
 					controller.clearCart();
-					checkoutPanel.getBooksInCartPanel().setData(controller.getCart().getSelectedBooks());
+					checkoutPanel.getBooksInCartPanel().setData(Controller.getBooksInCart());
 					checkoutPanel.getBooksInCartPanel().refresh();
 				}
 			}

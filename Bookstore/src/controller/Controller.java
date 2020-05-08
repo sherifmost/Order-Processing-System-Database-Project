@@ -1,9 +1,11 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import model.Book;
 import model.Cart;
+import model.CreditCardChecker;
 import model.Database;
 import model.Publisher;
 import model.SearchQuery;
@@ -14,17 +16,20 @@ import view.PromotionEvent;
 import view.PublisherEvent;
 import view.SearchEvent;
 import view.SignUpEvent;
+import view.TableElement;
 import view.UpdateDataEvent;
 
 public class Controller {
 	Database db;
 	Publisher publisher;
 	Book book;
+	static CreditCardChecker checker;
 
 	public Controller() {
 		db = new Database();
 		publisher = new Publisher();
 		book = new Book();
+		checker = new CreditCardChecker();
 	}
 
 	public void connectToDB() {
@@ -124,7 +129,39 @@ public class Controller {
 		return db.isManager();
 	}
 
-	public Cart getCart() {
+	public static Cart getCart() {
 		return Database.getLoggedInUser().getCart();
+	}
+
+	public static float getTotalSum() {
+		return getCart().getTotalSum();
+	}
+
+	public static ArrayList<TableElement> getBooksInCart() {
+		ArrayList<TableElement> tableElements = new ArrayList<TableElement>();
+		ArrayList<Book> books = getCart().getSelectedBooks();
+		ArrayList<Integer> quantities = getCart().getQuantities();
+		for (int i = 0; i < books.size(); i++) {
+			Book currentBook = books.get(i);
+			int quantity = quantities.get(i);
+			TableElement current = new TableElement();
+			current.getData().add(currentBook.getTitle());
+			current.getData().add("" + currentBook.getPrice());
+			current.getData().add("" + quantity);
+			current.getData().add("" + quantity * currentBook.getPrice());
+			tableElements.add(current);
+		}
+		return tableElements;
+	}
+
+	public static boolean validateCard(String cardName, String cardNumber) {
+		checker.setCreditCardName(cardName);
+		checker.setCreditCardNumber(cardNumber);
+		return checker.validateNumber();
+	}
+
+	public static boolean validateDate(Date date) {
+		checker.setExpireDate(date);
+		return checker.validateDate();
 	}
 }
