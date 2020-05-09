@@ -13,7 +13,7 @@ import javax.swing.JTextField;
 
 public class PublisherPanel extends JPanel {
 	// setting up the GUI objects used in the panel
-	private JLabel formLabel, nameLabel, addressLabel, telephoneLabel;
+	private JLabel formLabel, nameLabel, addressLabel, telephoneLabel, errorLabel;
 	private JTextField nameField, addressField, telephoneField;
 	private JButton addPublisherBtn;
 	private Listener listener;
@@ -25,6 +25,7 @@ public class PublisherPanel extends JPanel {
 		nameLabel = new JLabel("Publisher's name");
 		addressLabel = new JLabel("Publisher's address");
 		telephoneLabel = new JLabel("Publisher's telephone");
+		errorLabel = new JLabel("");
 		// setting the text fields
 		nameField = new JTextField(15);
 		addressField = new JTextField(15);
@@ -62,6 +63,9 @@ public class PublisherPanel extends JPanel {
 		gc.gridy = 6;
 		gc.gridx = 1;
 		add(telephoneField, gc);
+		gc.gridy = 8;
+		gc.gridx = 1;
+		add(errorLabel, gc);
 		gc.insets = new Insets(30, 0, 0, 0);
 		gc.gridy = 7;
 		gc.gridx = 2;
@@ -83,6 +87,10 @@ public class PublisherPanel extends JPanel {
 	// setter for the listener
 	public void setListener(Listener listener) {
 		this.listener = listener;
+	}
+
+	public JLabel getErrorLabel() {
+		return errorLabel;
 	}
 
 	// Serial ID

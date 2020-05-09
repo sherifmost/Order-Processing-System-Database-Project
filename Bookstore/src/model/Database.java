@@ -8,15 +8,17 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import utils.Category;
 import utils.MetaData;
-import view.PromotionEvent;
-import view.UpdateDataEvent;
 
 public class Database {
 	private static User loggedInUser;
 	private static Connection connection;
+	private String startTransactionQuery = "START TRANSACTION;";
+	private String disableAutoCommit = "SET AUTOCOMMIT = 0;";
+	private String enableAutoCommit = "SET AUTOCOMMIT = 1;";
+	private String commit = "COMMIT;";
+	private String rollBack = "ROLLBACK;";
 
 	public void createConnection() {
 		try {
@@ -69,8 +71,7 @@ public class Database {
 	}
 
 	public void signUpSuperUser() {
-		User sudo = new User("root", "root", "root", "root@alexu.edu.eg", "password",
-				"FOE - Shatby", "07775000");
+		User sudo = new User("root", "root", "root", "root@alexu.edu.eg", "password", "FOE - Shatby", "07775000");
 		sudo.setManager();
 		if (!isDuplicateUser(sudo.getUserName(), sudo.getEmail())) {
 			signUpNewUser(sudo);
@@ -109,9 +110,8 @@ public class Database {
 			try {
 				fillInUser(rs.getString("userName"), rs.getString("Fname"), rs.getString("Lname"),
 						rs.getString("email"), password, rs.getString("shippingAddress"), rs.getString("phone"),
-						rs.getBoolean("isManager"));
+						isManager);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -141,10 +141,9 @@ public class Database {
 	}
 
 	// methods to add a publisher to the database
-	public void addNewPublisher(Publisher publisher) {
+	public boolean addNewPublisher(Publisher publisher) {
 		if (isDuplicatePublisher(publisher)) {
-			System.out.println("This publisher already exists!");
-			return;
+			return false;
 		}
 		try {
 			Statement statement = connection.createStatement();
@@ -155,6 +154,7 @@ public class Database {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return true;
 
 	}
 
@@ -183,8 +183,8 @@ public class Database {
 	}
 
 	// This function is to update the user info
-	public boolean updateUser(UpdateDataEvent e) {
-		String userName = e.getUsername();
+	public boolean updateUser(User e) {
+		String userName = e.getUserName();
 		String firstaName = e.getFirstName();
 		String lastName = e.getLastName();
 		String password = e.getPassword();
@@ -278,8 +278,8 @@ public class Database {
 	private void fillInUser(String userName, String firstName, String lastName, String email, String password,
 			String shippingAddress, String phone, boolean isManager) {
 		Cart cart = new Cart();
-		setLoggedInUser(new User(userName, firstName, lastName, email, password, shippingAddress, phone,
-				isManager, cart));
+		setLoggedInUser(
+				new User(userName, firstName, lastName, email, password, shippingAddress, phone, isManager, cart));
 	}
 
 	public static User getLoggedInUser() {
@@ -289,7 +289,7 @@ public class Database {
 	public static void setLoggedInUser(User loggedInUser) {
 		Database.loggedInUser = loggedInUser;
 	}
-	
+
 	public boolean isManager() {
 		return loggedInUser.isManager();
 	}
@@ -348,28 +348,53 @@ public class Database {
 
 		return booksList;
 	}
-	
+
 	public void addBookToCart(Book book, int quantity) {
 		Cart cart = loggedInUser.getCart();
 		cart.addBookToCart(book, quantity);
 		cart.showCart();
 	}
 
-	public boolean checkout() {
+	public String checkout() {
+		String error = "";
 		ArrayList<Book> books = loggedInUser.getCart().getSelectedBooks();
 		ArrayList<Integer> quantities = loggedInUser.getCart().getQuantities();
-		boolean checkoutCompleted = false;
 
-		// check if enough books exist
-		// then update the database and return true
-		// else return false
-
-		return checkoutCompleted;
+		try {
+			Statement statement = connection.createStatement();
+			// starting a transaction for checkout
+			statement.execute(startTransactionQuery);
+			// Removing auto increment to be able to perform commit and roll back.
+			statement.execute(disableAutoCommit);
+			// performing the update queries
+			for (int i = 0; i < books.size(); i++) {
+				Book currentBook = books.get(i);
+				int quantity = quantities.get(i);
+				int ISBN = currentBook.getISBN();
+				try {
+					statement.execute("UPDATE book SET copies = copies - " + quantity + " WHERE ISBN = " + ISBN + ";");
+				} catch (SQLException ex) {
+					error = "Unfortunately transaction failed, " + currentBook.getTitle()
+							+ " doesn't have enough copies in stock.";
+					// performing roll back when an error occurs
+					statement.execute(rollBack);
+					statement.execute(enableAutoCommit);
+					statement.close();
+					return error;
+				}
+			}
+			// performing commit if all updates completed successfully
+			statement.execute(commit);
+			statement.execute(enableAutoCommit);
+			statement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
 
 	// Promoting the user
-	public boolean promoteUser(PromotionEvent e) {
-		String userName = e.getUserName();
+	public boolean promoteUser(String userName) {
 		try {
 			Statement statement = connection.createStatement();
 			ResultSet rs = statement.executeQuery(
@@ -397,7 +422,7 @@ public class Database {
 
 		return true;
 	}
-	
+
 	public ArrayList<Order> searchOrders() {
 		ArrayList<Order> ordersList = new ArrayList<>();
 		try {
@@ -409,18 +434,18 @@ public class Database {
 				ordersList.add(order);
 			}
 			statement.close();
-		} catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return ordersList;
 	}
-	
+
 	public String placeOrder(Order order) {
 		String errorMsg = "";
 		try {
 			Statement statement = connection.createStatement();
-			String operation = "INSERT INTO BOOK_ORDERS VALUES('" + order.getISBN() + "', '" +
-			order.getQuantity()+ "')";
+			String operation = "INSERT INTO BOOK_ORDERS VALUES('" + order.getISBN() + "', '" + order.getQuantity()
+					+ "')";
 			statement.execute(operation);
 			statement.close();
 		} catch (SQLException e) {
@@ -428,7 +453,7 @@ public class Database {
 		}
 		return errorMsg;
 	}
-	
+
 	public HashMap<Integer, String> findOrdersBookTitles() {
 		HashMap<Integer, String> results = new HashMap<>();
 		try {
@@ -439,12 +464,12 @@ public class Database {
 				results.put(rs.getInt(MetaData.BOOK_ISBN), rs.getString(MetaData.BOOK_TITLE));
 			}
 			statement.close();
-		} catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return results;
 	}
-	
+
 	public void confirmOrders(ArrayList<Integer> orders) {
 		try {
 			Statement statement = connection.createStatement();

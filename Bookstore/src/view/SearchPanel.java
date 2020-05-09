@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -35,7 +36,7 @@ public class SearchPanel extends JPanel {
 	private ButtonGroup categoryGroup;
 	private JRadioButton scienceBtn, artBtn, religionBtn, historyBtn, geographyBtn;
 	private JComboBox<String> fromYearComboBox, toYearComboBox;
-	private JButton searchBtn, modifyBtn, addToCartBtn;
+	private JButton searchBtn, modifyBtn, addToCartBtn, backBtn;
 	private Listener listener;
 	private TablePanel tablePanel;
 	private boolean isManager;
@@ -94,6 +95,7 @@ public class SearchPanel extends JPanel {
 		searchBtn = new JButton("SEARCH");
 		modifyBtn = new JButton("Modify Book");
 		addToCartBtn = new JButton("Add To Cart");
+		backBtn = new JButton("Back");
 
 		// table
 		tablePanel = new TablePanel();
@@ -116,7 +118,6 @@ public class SearchPanel extends JPanel {
 		gc.gridy = 1;
 		gc.gridx = 0;
 		gc.gridwidth = 1;
-		
 
 		add(bookTitleLabel, gc);
 		gc.gridy = 1;
@@ -179,12 +180,15 @@ public class SearchPanel extends JPanel {
 		gc.ipady = 30;
 		gc.fill = GridBagConstraints.HORIZONTAL;
 		add(searchBtn, gc);
+		gc.gridx = 2;
+		add(backBtn, gc);
 		gc.gridx = 0;
 		gc.gridy++;
 		gc.gridwidth = 4;
 		gc.ipady = 100;
 		add(tablePanel, gc);
-
+		// styling
+		backBtn.setBackground(Color.green);
 		// search button action
 		searchBtn.addActionListener(new ActionListener() {
 			@Override
@@ -232,25 +236,45 @@ public class SearchPanel extends JPanel {
 
 			}
 		});
-
+		backBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				listener.eventOccurred(new SwitchEvent(this));
+			}
+		});
 		addToCartBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// we need to check that the entered value is integer
-				int quantity = Integer.parseInt(quantityField.getText());
-				
-				if (quantity <= availableQuantity) {
-					listener.eventOccured(new BookEvent(this, selectedISBN, selectedTitle, selectedPublisher, selectedPrice,
-							selectedCategory, availableQuantity, quantity));
-				} else {
+				boolean wrongAdd = false;
+				if (selectedBookLabel.getText().compareTo("No selected Book !") == 0) {
+					wrongAdd = true;
+					JOptionPane.showMessageDialog(null, "You must select a book first to add to cart !", "Invalid Operation",
+							JOptionPane.ERROR_MESSAGE);
+				} 
+				int quantity = 0;
+				try {
+					quantity = Integer.parseInt(quantityField.getText());
+
+				} catch (NumberFormatException nfe) {
+					if (!wrongAdd) {
+					JOptionPane.showMessageDialog(null, "Please enter a quantity !", "Invalid Operation",
+							JOptionPane.ERROR_MESSAGE);
+					wrongAdd = true;
+					}
+				}
+				if (!wrongAdd && quantity <= availableQuantity) {
+					listener.eventOccured(new BookEvent(this, selectedISBN, selectedTitle, selectedPublisher,
+							selectedPrice, selectedCategory, availableQuantity, quantity));
+				} else if (quantity > availableQuantity){
 					JOptionPane.showMessageDialog(null, "we cannot support this amount of books !", "Invalid Operation",
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
-		
 
 		tablePanel.getTable().addMouseListener(new MouseAdapter() {
+
 			public void mousePressed(MouseEvent e) {
 				JTable table = tablePanel.getTable();
 				TableModel tableModel = tablePanel.getTableModel();
@@ -262,10 +286,11 @@ public class SearchPanel extends JPanel {
 				availableQuantity = (int) tableModel.getValueAt(row, 3);
 				selectedPublisher = (String) tableModel.getValueAt(row, 4);
 				selectedPrice = (int) tableModel.getValueAt(row, 5);
-				
+
 				selectedBookLabel.setText(selectedTitle + "  -- ISBN: " + selectedISBN);
 
 			}
+
 		});
 
 	}
