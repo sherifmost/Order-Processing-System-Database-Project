@@ -98,8 +98,6 @@ public class Database {
 				boolean storedAsManager = rs.getBoolean("IsManager");
 				if (isManager && !storedAsManager) {
 					return "You are not a manager!";
-				} else if (!isManager && storedAsManager) {
-					return "You must login as Manager!";
 				}
 			} else {
 				return "This Username is not registered!";
@@ -111,9 +109,8 @@ public class Database {
 			try {
 				fillInUser(rs.getString("userName"), rs.getString("Fname"), rs.getString("Lname"),
 						rs.getString("email"), password, rs.getString("shippingAddress"), rs.getString("phone"),
-						rs.getBoolean("isManager"));
+						isManager);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
