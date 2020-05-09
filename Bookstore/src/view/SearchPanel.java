@@ -246,18 +246,27 @@ public class SearchPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// we need to check that the entered value is integer
+				boolean wrongAdd = false;
+				if (selectedBookLabel.getText().compareTo("No selected Book !") == 0) {
+					wrongAdd = true;
+					JOptionPane.showMessageDialog(null, "You must select a book first to add to cart !", "Invalid Operation",
+							JOptionPane.ERROR_MESSAGE);
+				} 
 				int quantity = 0;
 				try {
 					quantity = Integer.parseInt(quantityField.getText());
 
 				} catch (NumberFormatException nfe) {
+					if (!wrongAdd) {
 					JOptionPane.showMessageDialog(null, "Please enter a quantity !", "Invalid Operation",
 							JOptionPane.ERROR_MESSAGE);
+					wrongAdd = true;
+					}
 				}
-				if (quantity <= availableQuantity) {
+				if (!wrongAdd && quantity <= availableQuantity) {
 					listener.eventOccured(new BookEvent(this, selectedISBN, selectedTitle, selectedPublisher,
 							selectedPrice, selectedCategory, availableQuantity, quantity));
-				} else {
+				} else if (quantity > availableQuantity){
 					JOptionPane.showMessageDialog(null, "we cannot support this amount of books !", "Invalid Operation",
 							JOptionPane.ERROR_MESSAGE);
 				}

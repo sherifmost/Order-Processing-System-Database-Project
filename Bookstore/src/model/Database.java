@@ -98,6 +98,8 @@ public class Database {
 				boolean storedAsManager = rs.getBoolean("IsManager");
 				if (isManager && !storedAsManager) {
 					return "You are not a manager!";
+				} else if (!isManager && storedAsManager) {
+					return "You must login as Manager!";
 				}
 			} else {
 				return "This Username is not registered!";

@@ -36,7 +36,7 @@ public class User {
 		this.password = password;
 		this.shippingAddress = shippingAddress;
 		this.phone = phone;
-		this.manager = false;
+		this.manager = isManager;
 		this.cart = cart;
 	}
 
