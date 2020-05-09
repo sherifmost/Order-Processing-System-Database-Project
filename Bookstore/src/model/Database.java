@@ -372,7 +372,7 @@ public class Database {
 				int quantity = quantities.get(i);
 				int ISBN = currentBook.getISBN();
 				try {
-					statement.execute("UPDATE book SET copies = copies - " + quantity + " WHERE ISBN = " + ISBN + ";");
+					statement.execute("UPDATE BOOK SET copies = copies - " + quantity + " WHERE ISBN = " + ISBN + ";");
 				} catch (SQLException ex) {
 					error = "Unfortunately transaction failed, " + currentBook.getTitle()
 							+ " doesn't have enough copies in stock.";

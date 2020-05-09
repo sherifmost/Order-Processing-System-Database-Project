@@ -1,12 +1,12 @@
   -- script for adding the triggers
-  use bookstore;
+  use BOOKSTORE;
   -- trigger to prevent updating the number of copies of a certain 
   -- book if it would become negative.
 DROP TRIGGER  IF EXISTS book_negative_update;
 DELIMITER $$
 CREATE TRIGGER book_negative_update
 BEFORE UPDATE
-ON book FOR EACH ROW
+ON BOOK FOR EACH ROW
 BEGIN
 	-- setting an appropriate error message.
     DECLARE errorMessage VARCHAR(255);
@@ -24,10 +24,10 @@ DROP TRIGGER  IF EXISTS book_order_update;
 DELIMITER $$
 CREATE TRIGGER book_order_update
 AFTER UPDATE
-ON book FOR EACH ROW
+ON BOOK FOR EACH ROW
 BEGIN
     IF (new.copies < new.threshold AND old.copies>= old.threshold)  THEN
-		INSERT INTO book_orders VALUES(new.ISBN,100);
+		INSERT INTO BOOK_ORDERS VALUES(new.ISBN,100);
     END IF;
 END $$
 DELIMITER ;
@@ -38,12 +38,8 @@ DROP TRIGGER  IF EXISTS book_order_perform;
 DELIMITER $$
 CREATE TRIGGER book_order_perform
 AFTER DELETE
-ON book_orders FOR EACH ROW
+ON BOOK_ORDERS FOR EACH ROW
 BEGIN
-    	UPDATE book SET copies = copies + OLD.TotalOrdered WHERE ISBN = OLD.ISBN;
+    	UPDATE BOOK SET copies = copies + OLD.TotalOrdered WHERE ISBN = OLD.ISBN;
 END $$
 DELIMITER ;
-
-
-
-  
