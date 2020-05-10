@@ -29,11 +29,11 @@ ENGINE = InnoDB;
 -- Table `BOOKSTORE`.`BOOK`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `BOOKSTORE`.`BOOK` (
-  `ISBN` INT UNSIGNED NOT NULL,
+  `ISBN` BIGINT UNSIGNED NOT NULL,
   `Title` VARCHAR(150) NOT NULL,
   `PublisherName` VARCHAR(45) NOT NULL,
   `PublicationYear` YEAR NULL,
-  `Price` INT UNSIGNED NOT NULL,
+  `Price` FLOAT UNSIGNED NOT NULL,
   `Category` ENUM('Science', 'Art', 'Religion', 'History', 'Geography') NOT NULL,
   `Threshold` INT UNSIGNED NOT NULL,
   `Copies` INT NOT NULL,
@@ -53,7 +53,7 @@ ENGINE = InnoDB;
 -- Table `BOOKSTORE`.`BOOK_AUTHOR`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `BOOKSTORE`.`BOOK_AUTHOR` (
-  `ISBN` INT UNSIGNED NOT NULL,
+  `ISBN` BIGINT UNSIGNED NOT NULL,
   `Fname` VARCHAR(30) NOT NULL,
   `Lname` VARCHAR(30) NOT NULL,
   PRIMARY KEY (`ISBN`, `Fname`, `Lname`),
@@ -70,7 +70,7 @@ ENGINE = InnoDB;
 -- Table `BOOKSTORE`.`BOOK_ORDERS`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `BOOKSTORE`.`BOOK_ORDERS` (
-  `ISBN` INT UNSIGNED NOT NULL,
+  `ISBN` BIGINT UNSIGNED NOT NULL,
   `TotalOrdered` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`ISBN`),
   CONSTRAINT `ORDER_TO_BOOK`
@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `BOOKSTORE`.`USER` (
   `ShippingAddress` VARCHAR(150) NOT NULL,
   `IsManager` TINYINT NOT NULL,
   PRIMARY KEY (`UserName`),
-  UNIQUE INDEX `Email_UNIQUE` (`Email` ASC) )
+  UNIQUE INDEX `Email_UNIQUE` (`Email` ASC))
 ENGINE = InnoDB;
 
 
