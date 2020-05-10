@@ -41,5 +41,21 @@ public class Cart {
 		}
 	}
 	
+	public void filter(ArrayList<Boolean> filter) {
+		float newSum = 0;
+		ArrayList<Book> filteredBooks = new ArrayList<>();
+		ArrayList<Integer> filteredQuantities = new ArrayList<>();
+		for (int index = 0; index < selectedBooks.size(); index++) {
+			if (!filter.get(index)) {
+				filteredBooks.add(selectedBooks.get(index));
+				filteredQuantities.add(quantities.get(index));
+				newSum += selectedBooks.get(index).getPrice() * quantities.get(index);
+			}
+		}
+		this.selectedBooks = filteredBooks;
+		this.quantities = filteredQuantities;
+		totalSum = newSum;
+	}
+	
 		
 }

@@ -175,6 +175,11 @@ public class Controller {
 		}
 		return tableElements;
 	}
+	
+	public static void filterCart(ArrayList<Boolean> filter) {
+		System.out.println(filter.get(0));
+		Database.getLoggedInUser().getCart().filter(filter);
+	}
 
 	public static boolean validateCard(String cardName, String cardNumber) {
 		checker.setCreditCardName(cardName);
