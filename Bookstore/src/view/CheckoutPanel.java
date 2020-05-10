@@ -27,7 +27,7 @@ public class CheckoutPanel extends JPanel {
 	private JTextField cardNumberField, expireDateField;
 	private JComboBox<String> cardNameBox;
 	private CartTablePanel booksInCartPanel;
-	private JButton checkoutBtn, backBtn;
+	private JButton checkoutBtn, backBtn, deleteBtn;
 	private Listener listener;
 	private ArrayList<TableElement> booksInCart;
 	private SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -69,6 +69,7 @@ public class CheckoutPanel extends JPanel {
 		// Buttons
 		checkoutBtn = new JButton("Proceed to check out");
 		backBtn = new JButton("Back");
+		deleteBtn = new JButton("Remove selected");
 		// table
 		booksInCartPanel = new CartTablePanel();
 		booksInCart = Controller.getBooksInCart();
@@ -130,9 +131,15 @@ public class CheckoutPanel extends JPanel {
 		gc.gridwidth = 4;
 		gc.ipady = 100;
 		add(booksInCartPanel, gc);
+		gc.gridy++;
+		gc.gridx = 1;
+		gc.ipady = 20;
+		gc.gridwidth = 1;
+		add(deleteBtn, gc);
 		// Styling
 		checkoutBtn.setBackground(Color.orange);
 		backBtn.setBackground(Color.green);
+		deleteBtn.setBackground(Color.RED);
 		this.setBackground(Color.GRAY);
 		// adding the actions
 		backBtn.addActionListener(new ActionListener() {
@@ -140,6 +147,14 @@ public class CheckoutPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				listener.eventOccurred(new SwitchEvent(this));
 
+			}
+		});
+		deleteBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Controller.filterCart(booksInCartPanel.getCheckoutTableModel().getSelectedRows());
+				booksInCartPanel.setData(Controller.getBooksInCart());
+				booksInCartPanel.refresh();
 			}
 		});
 		checkoutBtn.addActionListener(new ActionListener() {

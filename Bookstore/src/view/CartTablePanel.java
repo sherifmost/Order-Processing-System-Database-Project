@@ -44,4 +44,5 @@ public class CartTablePanel extends JTable {
 	public void setCheckoutTableModel(CartTableModel checkoutTableModel) {
 		this.checkoutTableModel = checkoutTableModel;
 	}
+	
 }
