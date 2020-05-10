@@ -41,9 +41,10 @@ public class SearchPanel extends JPanel {
 	private TablePanel tablePanel;
 	private boolean isManager;
 
-	private int selectedISBN, availableQuantity;
+	long selectedISBN;
+	private int availableQuantity;
 	private String selectedTitle, selectedPublisher;
-	private int selectedPrice;
+	private float selectedPrice;
 	private Category selectedCategory;
 
 	public SearchPanel() {
@@ -249,24 +250,24 @@ public class SearchPanel extends JPanel {
 				boolean wrongAdd = false;
 				if (selectedBookLabel.getText().compareTo("No selected Book !") == 0) {
 					wrongAdd = true;
-					JOptionPane.showMessageDialog(null, "You must select a book first to add to cart !", "Invalid Operation",
-							JOptionPane.ERROR_MESSAGE);
-				} 
+					JOptionPane.showMessageDialog(null, "You must select a book first to add to cart !",
+							"Invalid Operation", JOptionPane.ERROR_MESSAGE);
+				}
 				int quantity = 0;
 				try {
 					quantity = Integer.parseInt(quantityField.getText());
 
 				} catch (NumberFormatException nfe) {
 					if (!wrongAdd) {
-					JOptionPane.showMessageDialog(null, "Please enter a quantity !", "Invalid Operation",
-							JOptionPane.ERROR_MESSAGE);
-					wrongAdd = true;
+						JOptionPane.showMessageDialog(null, "Please enter a quantity !", "Invalid Operation",
+								JOptionPane.ERROR_MESSAGE);
+						wrongAdd = true;
 					}
 				}
 				if (!wrongAdd && quantity <= availableQuantity) {
 					listener.eventOccured(new BookEvent(this, selectedISBN, selectedTitle, selectedPublisher,
 							selectedPrice, selectedCategory, availableQuantity, quantity));
-				} else if (quantity > availableQuantity){
+				} else if (quantity > availableQuantity) {
 					JOptionPane.showMessageDialog(null, "we cannot support this amount of books !", "Invalid Operation",
 							JOptionPane.ERROR_MESSAGE);
 				}
@@ -281,11 +282,11 @@ public class SearchPanel extends JPanel {
 				int row = table.rowAtPoint(e.getPoint());
 				table.getSelectionModel().setSelectionInterval(row, row);
 				selectedTitle = (String) tableModel.getValueAt(row, 0);
-				selectedISBN = (int) tableModel.getValueAt(row, 1);
+				selectedISBN = (long) tableModel.getValueAt(row, 1);
 				selectedCategory = (Category) tableModel.getValueAt(row, 2);
 				availableQuantity = (int) tableModel.getValueAt(row, 3);
 				selectedPublisher = (String) tableModel.getValueAt(row, 4);
-				selectedPrice = (int) tableModel.getValueAt(row, 5);
+				selectedPrice = (float) tableModel.getValueAt(row, 5);
 
 				selectedBookLabel.setText(selectedTitle + "  -- ISBN: " + selectedISBN);
 
