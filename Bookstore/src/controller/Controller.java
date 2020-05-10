@@ -97,7 +97,7 @@ public class Controller {
 	public ArrayList<OrderEvent> searchOrders() {
 		ArrayList<OrderEvent> results = new ArrayList<>();
 		ArrayList<Order> orderResults = db.searchOrders();
-		HashMap<Integer, String> title = db.findOrdersBookTitles();
+		HashMap<Long, String> title = db.findOrdersBookTitles();
 		for (Order order : orderResults) {
 			results.add(new OrderEvent(this, order.getISBN(), order.getQuantity(), title.get(order.getISBN())));
 		}
@@ -147,7 +147,7 @@ public class Controller {
 		return db.isManager();
 	}
 
-	public void confirmOrders(ArrayList<Integer> orders) {
+	public void confirmOrders(ArrayList<Long> orders) {
 		db.confirmOrders(orders);
 	}
 

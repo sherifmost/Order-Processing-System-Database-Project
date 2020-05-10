@@ -4,11 +4,11 @@ import utils.Category;
 
 public class Book {
 	// Data corresponding to the book relation
-	private int ISBN;
+	private long ISBN;
 	private String title;
 	private String publisherName;
 	private int publicationYear;
-	private int price;
+	private float price;
 	private Category category;
 	private int threshold;
 	private int copies;
@@ -18,7 +18,7 @@ public class Book {
 
 	}
 
-	public Book(int ISBN, String title, String publisherName, int publicationYear, int price, Category category,
+	public Book(long ISBN, String title, String publisherName, int publicationYear, int price, Category category,
 			int threshold, int copies) {
 		setISBN(ISBN);
 		setTitle(title);
@@ -31,11 +31,11 @@ public class Book {
 	}
 
 	// getters and setters
-	public int getISBN() {
+	public long getISBN() {
 		return ISBN;
 	}
 
-	public void setISBN(int iSBN) {
+	public void setISBN(long iSBN) {
 		ISBN = iSBN;
 	}
 
@@ -63,11 +63,11 @@ public class Book {
 		this.publicationYear = publicationYear;
 	}
 
-	public int getPrice() {
+	public float getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
+	public void setPrice(float price) {
 		this.price = price;
 	}
 

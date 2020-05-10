@@ -370,7 +370,7 @@ public class Database {
 			for (int i = 0; i < books.size(); i++) {
 				Book currentBook = books.get(i);
 				int quantity = quantities.get(i);
-				int ISBN = currentBook.getISBN();
+				long ISBN = currentBook.getISBN();
 				try {
 					statement.execute("UPDATE BOOK SET copies = copies - " + quantity + " WHERE ISBN = " + ISBN + ";");
 				} catch (SQLException ex) {
@@ -454,14 +454,14 @@ public class Database {
 		return errorMsg;
 	}
 
-	public HashMap<Integer, String> findOrdersBookTitles() {
-		HashMap<Integer, String> results = new HashMap<>();
+	public HashMap<Long, String> findOrdersBookTitles() {
+		HashMap<Long, String> results = new HashMap<>();
 		try {
 			Statement statement = connection.createStatement();
 			String operation = "SELECT ISBN, Title FROM BOOK WHERE BOOK.ISBN IN (SElECT ISBN FROM BOOK_ORDERS)";
 			ResultSet rs = statement.executeQuery(operation);
 			while (rs.next()) {
-				results.put(rs.getInt(MetaData.BOOK_ISBN), rs.getString(MetaData.BOOK_TITLE));
+				results.put(rs.getLong(MetaData.BOOK_ISBN), rs.getString(MetaData.BOOK_TITLE));
 			}
 			statement.close();
 		} catch (SQLException e) {
@@ -470,7 +470,7 @@ public class Database {
 		return results;
 	}
 
-	public void confirmOrders(ArrayList<Integer> orders) {
+	public void confirmOrders(ArrayList<Long> orders) {
 		try {
 			Statement statement = connection.createStatement();
 			StringBuilder operation = new StringBuilder();

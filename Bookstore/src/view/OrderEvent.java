@@ -3,33 +3,34 @@ package view;
 import java.util.EventObject;
 
 public class OrderEvent extends EventObject {
-	
+
 	private static final long serialVersionUID = 7097018042433277100L;
-	private int ISBN, quantity;
+	private long ISBN;
+	private int quantity;
 	String title;
-	
+
 	public OrderEvent(Object source) {
 		super(source);
 	}
-	
-	public OrderEvent(Object source, int ISBN, int quantity) {
+
+	public OrderEvent(Object source, long ISBN, int quantity) {
 		super(source);
 		this.ISBN = ISBN;
 		this.quantity = quantity;
 	}
-	
-	public OrderEvent(Object source, int ISBN, int quantity, String title) {
+
+	public OrderEvent(Object source, long ISBN, int quantity, String title) {
 		super(source);
 		this.ISBN = ISBN;
 		this.quantity = quantity;
 		this.title = title;
 	}
 
-	public int getISBN() {
+	public long getISBN() {
 		return ISBN;
 	}
 
-	public void setISBN(int iSBN) {
+	public void setISBN(long iSBN) {
 		ISBN = iSBN;
 	}
 
@@ -40,7 +41,7 @@ public class OrderEvent extends EventObject {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	
+
 	public String getTitle() {
 		return title;
 	}

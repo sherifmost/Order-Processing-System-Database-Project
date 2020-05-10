@@ -2,7 +2,7 @@ package model;
 
 public class Author {
 	// data corresponding to the relation
-	private int ISBN;
+	private long ISBN;
 	private String fname;
 	private String lname;
 
@@ -11,18 +11,18 @@ public class Author {
 
 	}
 
-	public Author(int ISBN, String fname, String lname) {
+	public Author(long ISBN, String fname, String lname) {
 		setFname(fname);
 		setISBN(ISBN);
 		setLname(lname);
 	}
 
 	// setters and getters
-	public int getISBN() {
+	public long getISBN() {
 		return ISBN;
 	}
 
-	public void setISBN(int iSBN) {
+	public void setISBN(long iSBN) {
 		ISBN = iSBN;
 	}
 

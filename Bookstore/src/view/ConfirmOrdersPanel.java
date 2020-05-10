@@ -19,7 +19,7 @@ public class ConfirmOrdersPanel extends JPanel {
 	private Listener listener;
 	private JButton confirmBtn;
 	private ConfirmOrdersTableModel model;
-	
+
 	public ConfirmOrdersPanel() {
 		setLayout(new BorderLayout());
 		confirmOrders = new JLabel("Confirm orders");
@@ -32,7 +32,7 @@ public class ConfirmOrdersPanel extends JPanel {
 		confirmBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ArrayList<Integer> orders = new ArrayList<Integer>();
+				ArrayList<Long> orders = new ArrayList<Long>();
 				for (int i = 0; i < model.getTableData().size(); i++) {
 					if (model.getConfirmValues().get(i))
 						orders.add(model.getTableData().get(i).getISBN());
@@ -41,15 +41,15 @@ public class ConfirmOrdersPanel extends JPanel {
 			}
 		});
 	}
-	
+
 	public void setListener(Listener listener) {
 		this.listener = listener;
 	}
-	
+
 	public void setData(ArrayList<OrderEvent> tableData) {
 		model.setData(tableData);
 	}
-	
+
 	public void refresh() {
 		model.fireTableDataChanged();
 	}

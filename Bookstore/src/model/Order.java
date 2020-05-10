@@ -1,22 +1,23 @@
 package model;
 
 public class Order {
-	private int ISBN, quantity;
-	
+	private long ISBN;
+	private int quantity;
+
 	public Order() {
-		
+
 	}
-	
-	public Order(int isbn, int quantity) {
+
+	public Order(long isbn, int quantity) {
 		this.ISBN = isbn;
 		this.quantity = quantity;
 	}
 
-	public int getISBN() {
+	public long getISBN() {
 		return ISBN;
 	}
 
-	public void setISBN(int iSBN) {
+	public void setISBN(long iSBN) {
 		ISBN = iSBN;
 	}
 
@@ -27,5 +28,5 @@ public class Order {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	
+
 }

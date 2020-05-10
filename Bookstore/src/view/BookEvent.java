@@ -4,7 +4,9 @@ import java.util.EventObject;
 import utils.Category;
 
 public class BookEvent extends EventObject {
-	private int ISBN, price, threshold, copies, publicationYear;
+	private long ISBN;
+	private int threshold, copies, publicationYear;
+	private float price;
 	private Category category;
 	private String title;
 	private String publisherName;
@@ -15,7 +17,7 @@ public class BookEvent extends EventObject {
 		super(source);
 	}
 
-	public BookEvent(Object source, int ISBN, String title, String publisherName, int publicationYear, int price,
+	public BookEvent(Object source, long ISBN, String title, String publisherName, int publicationYear, float price,
 			Category category, int threshold, int copies) {
 		super(source);
 		this.ISBN = ISBN;
@@ -28,7 +30,7 @@ public class BookEvent extends EventObject {
 		this.copies = copies;
 	}
 
-	public BookEvent(Object source, int ISBN, String title, String publisherName, int price, Category category,
+	public BookEvent(Object source, long ISBN, String title, String publisherName, float price, Category category,
 			int copies, int quantity) {
 		super(source);
 		this.ISBN = ISBN;
@@ -41,11 +43,11 @@ public class BookEvent extends EventObject {
 	}
 
 	// getters and setters
-	public int getISBN() {
+	public long getISBN() {
 		return ISBN;
 	}
 
-	public void setISBN(int iSBN) {
+	public void setISBN(long iSBN) {
 		ISBN = iSBN;
 	}
 
@@ -73,11 +75,11 @@ public class BookEvent extends EventObject {
 		this.publicationYear = publicationYear;
 	}
 
-	public int getPrice() {
+	public float getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
+	public void setPrice(float price) {
 		this.price = price;
 	}
 
