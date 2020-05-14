@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `BOOKSTORE`.`SALES` (
   `UserName` VARCHAR(45) NOT NULL,
   `Quantity` INT UNSIGNED NOT NULL,
   `TimeStamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`ISBN`, `UserName`),
+  PRIMARY KEY (`ISBN`, `UserName`, `TimeStamp`),
   INDEX `Sales_to_user_idx` (`UserName` ASC),
   CONSTRAINT `Sales_to_book`
     FOREIGN KEY (`ISBN`)
