@@ -373,7 +373,10 @@ public class Database {
 				long ISBN = currentBook.getISBN();
 				try {
 					statement.execute("UPDATE BOOK SET copies = copies - " + quantity + " WHERE ISBN = " + ISBN + ";");
+					statement.execute("INSERT INTO SALES(ISBN,UserName,Quantity) VALUES (" + ISBN + ",'"
+							+ loggedInUser.getUserName() + "'," + quantity + ");");
 				} catch (SQLException ex) {
+					ex.printStackTrace();
 					error = "Unfortunately transaction failed, " + currentBook.getTitle()
 							+ " doesn't have enough copies in stock.";
 					// performing roll back when an error occurs
@@ -488,7 +491,7 @@ public class Database {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static Connection getConnection() {
 		return connection;
 	}
