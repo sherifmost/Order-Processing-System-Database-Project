@@ -98,6 +98,29 @@ CREATE TABLE IF NOT EXISTS `BOOKSTORE`.`USER` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `BOOKSTORE`.`SALES`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `BOOKSTORE`.`SALES` (
+  `ISBN` BIGINT UNSIGNED NOT NULL,
+  `UserName` VARCHAR(45) NOT NULL,
+  `Quantity` INT UNSIGNED NOT NULL,
+  `TimeStamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`ISBN`, `UserName`),
+  INDEX `Sales_to_user_idx` (`UserName` ASC),
+  CONSTRAINT `Sales_to_book`
+    FOREIGN KEY (`ISBN`)
+    REFERENCES `BOOKSTORE`.`BOOK` (`ISBN`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `Sales_to_user`
+    FOREIGN KEY (`UserName`)
+    REFERENCES `BOOKSTORE`.`USER` (`UserName`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
