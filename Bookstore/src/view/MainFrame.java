@@ -22,6 +22,7 @@ public class MainFrame extends JFrame {
 	private PromotionPanel promotionPanel;
 	private PlaceOrderPanel placeOrderPanel;
 	private ConfirmOrdersPanel confirmOrdersPanel;
+	private ReportsPanel reportsPanel;
 	private CheckoutPanel checkoutPanel;
 	private static MainFrame uniqueInstance;
 	private static JPanel cards;
@@ -41,6 +42,7 @@ public class MainFrame extends JFrame {
 		promotionPanel = new PromotionPanel();
 		placeOrderPanel = new PlaceOrderPanel();
 		confirmOrdersPanel = new ConfirmOrdersPanel();
+		reportsPanel = new ReportsPanel();
 		cards = new JPanel(new CardLayout());
 
 		loginPanel.setListener(new Listener() {
@@ -107,6 +109,9 @@ public class MainFrame extends JFrame {
 					CardLayout cl = (CardLayout) cards.getLayout();
 					cl.show(cards, "CONFIRM");
 					confirmOrdersPanel.refresh();
+				} else if (e.getSource() == managerPanel.getViewReportsBtn()) {
+					CardLayout cl = (CardLayout) cards.getLayout();
+					cl.show(cards, "REPORTS");
 				}
 			}
 		});
@@ -159,10 +164,6 @@ public class MainFrame extends JFrame {
 				} else if (e.getSource() == userPanel.getSearchForBookBtn()) {
 					CardLayout cl = (CardLayout) cards.getLayout();
 					cl.show(cards, "SEARCH");
-				} else if (e.getSource() == userPanel.getAddToCartBtn()) {
-
-				} else if (e.getSource() == userPanel.getManageCartBtn()) {
-
 				} else if (e.getSource() == userPanel.getCheckOutCartBtn()) {
 					initializeCartInfo();
 					CardLayout cl = (CardLayout) cards.getLayout();
@@ -221,7 +222,7 @@ public class MainFrame extends JFrame {
 		cards.add(promotionPanel, "PROMOTE");
 		cards.add(placeOrderPanel, "ORDER");
 		cards.add(confirmOrdersPanel, "CONFIRM");
-
+		cards.add(reportsPanel, "REPORTS");
 		this.add(cards);
 	}
 

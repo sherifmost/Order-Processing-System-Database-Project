@@ -93,6 +93,13 @@ public class ManagerPanel extends JPanel {
 				listener.eventOccured(e);
 			}
 		});
+		
+		viewReportsBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				listener.eventOccured(e);
+			}
+		});
 	}
 
 	public JButton getAddBookBtn() {

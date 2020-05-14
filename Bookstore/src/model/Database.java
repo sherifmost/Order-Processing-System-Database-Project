@@ -488,4 +488,8 @@ public class Database {
 			e.printStackTrace();
 		}
 	}
+	
+	public static Connection getConnection() {
+		return connection;
+	}
 }

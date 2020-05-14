@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Date;
 
+import java.sql.Connection;
+
 import model.Book;
 import model.Cart;
 import model.CreditCardChecker;
@@ -23,11 +25,11 @@ import view.TableElement;
 import view.UpdateDataEvent;
 
 public class Controller {
-	Database db;
-	Publisher publisher;
-	Book book;
+	private static Database db;
+	private Publisher publisher;
+	private Book book;
 	Order order;
-	static CreditCardChecker checker;
+	private static CreditCardChecker checker;
 
 	public Controller() {
 		db = new Database();
@@ -190,5 +192,9 @@ public class Controller {
 	public static boolean validateDate(Date date) {
 		checker.setExpireDate(date);
 		return checker.validateDate();
+	}
+	
+	public static Connection getConnection() {
+		return Database.getConnection();
 	}
 }
