@@ -372,9 +372,9 @@ public class Database {
 				int quantity = quantities.get(i);
 				long ISBN = currentBook.getISBN();
 				try {
-					statement.execute("UPDATE BOOK SET copies = copies - " + quantity + " WHERE ISBN = " + ISBN + ";");
+					statement.execute("UPDATE BOOK SET copies = copies - " + quantity + " WHERE ISBN = " + ISBN);
 					statement.execute("INSERT INTO SALES(ISBN,UserName,Quantity) VALUES (" + ISBN + ",'"
-							+ loggedInUser.getUserName() + "'," + quantity + ");");
+							+ loggedInUser.getUserName() + "'," + quantity + ")");
 				} catch (SQLException ex) {
 					ex.printStackTrace();
 					error = "Unfortunately transaction failed, " + currentBook.getTitle()

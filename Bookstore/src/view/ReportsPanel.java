@@ -14,6 +14,7 @@ import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.design.JRDesignQuery;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.view.JasperViewer;
@@ -52,7 +53,6 @@ public class ReportsPanel extends JPanel {
 					JasperPrint jprint = JasperFillManager.fillReport(jreport, null, Controller.getConnection());
 					JasperViewer.viewReport(jprint);
 				} catch (JRException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -62,12 +62,11 @@ public class ReportsPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					JasperDesign jdesign = JRXmlLoader.load("src/reports/SalesReport.jrxml");
+					JasperDesign jdesign = JRXmlLoader.load("src/reports/CustomerReport.jrxml");
 					JasperReport jreport = JasperCompileManager.compileReport(jdesign);
 					JasperPrint jprint = JasperFillManager.fillReport(jreport, null, Controller.getConnection());
 					JasperViewer.viewReport(jprint);
 				} catch (JRException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -77,12 +76,11 @@ public class ReportsPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					JasperDesign jdesign = JRXmlLoader.load("src/reports/SalesReport.jrxml");
+					JasperDesign jdesign = JRXmlLoader.load("src/reports/BooksReport.jrxml");
 					JasperReport jreport = JasperCompileManager.compileReport(jdesign);
 					JasperPrint jprint = JasperFillManager.fillReport(jreport, null, Controller.getConnection());
 					JasperViewer.viewReport(jprint);
 				} catch (JRException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}

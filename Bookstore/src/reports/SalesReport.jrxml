@@ -3,7 +3,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SalesReport" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d4a1d5eb-82dd-412f-a620-202e4bdf9dba">
 	<property name="template.engine" value="tabular_template"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
-	<property name="com.jaspersoft.studio.data.sql.tables" value="YFNBTEVTYCAsMTUsMTUsZDNiY2UwOTQtNzg2ZC00ZGIxLWIxMTAtYjRlNWI4YzcxYzNkOw=="/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<style name="Table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -40,31 +40,23 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<subDataset name="tableDataset" uuid="1d38a5fb-d7cc-4876-886e-660756a95b21">
+	<subDataset name="tableDataset" uuid="f80dba1b-405d-4857-8427-fb7d772e8b2e">
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
 		<queryString language="SQL">
-			<![CDATA[SELECT *
-FROM SALES
-WHERE TimeStamp between '01-04-2020' and '01-05-2020']]>
+			<![CDATA[SELECT Title, QUANTITY
+FROM SALES, BOOK
+WHERE SALES.ISBN = BOOK.ISBN]]>
 		</queryString>
-		<field name="ISBN" class="java.math.BigInteger">
-			<property name="com.jaspersoft.studio.field.label" value="ISBN"/>
+		<field name="Title" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="Title"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="BOOK"/>
+		</field>
+		<field name="QUANTITY" class="java.lang.Long">
+			<property name="com.jaspersoft.studio.field.label" value="QUANTITY"/>
 			<property name="com.jaspersoft.studio.field.tree.path" value="SALES"/>
 		</field>
-		<field name="UserName" class="java.lang.String">
-			<property name="com.jaspersoft.studio.field.label" value="UserName"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="SALES"/>
-		</field>
-		<field name="Quantity" class="java.lang.Long">
-			<property name="com.jaspersoft.studio.field.label" value="Quantity"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="SALES"/>
-		</field>
-		<field name="TimeStamp" class="java.sql.Timestamp">
-			<property name="com.jaspersoft.studio.field.label" value="TimeStamp"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="SALES"/>
-		</field>
-		<group name="TimeStamp">
-			<groupExpression><![CDATA[$F{TimeStamp}]]></groupExpression>
+		<group name="Title">
+			<groupExpression><![CDATA[$F{Title}]]></groupExpression>
 		</group>
 	</subDataset>
 	<queryString>
@@ -79,7 +71,13 @@ WHERE TimeStamp between '01-04-2020' and '01-05-2020']]>
 					<textElement>
 						<font size="34" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Sales Report]]></text>
+					<text><![CDATA[Sales]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="395" y="43" width="180" height="20" forecolor="#FFFFFF" uuid="0a399baa-bad3-4b1a-9fe3-bb1c563e6a27"/>
+					<textElement textAlignment="Right">
+						<font size="14" isBold="false"/>
+					</textElement>
 				</staticText>
 			</frame>
 		</band>
@@ -108,28 +106,28 @@ WHERE TimeStamp between '01-04-2020' and '01-05-2020']]>
 		<band height="200" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<componentElement>
-				<reportElement x="0" y="0" width="555" height="200" uuid="445d48c4-ba42-4640-8077-01e1ab83b8e5">
+				<reportElement x="0" y="0" width="555" height="200" uuid="e4006474-f2a0-414a-b784-fba20d58a8df">
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
 					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="tableDataset" uuid="dd5a0ff2-d609-45b5-9dce-363e61940597">
+					<datasetRun subDataset="tableDataset" uuid="728ce338-47b0-4dbb-abc0-230200bb3716">
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
-					<jr:columnGroup width="360" uuid="2480ab0e-5a78-4ebe-a720-1e9b0bde4ee0">
-						<jr:groupHeader groupName="TimeStamp">
+					<jr:columnGroup width="180" uuid="ba620eae-be3d-4e55-9c2b-a0a4218752b2">
+						<jr:groupHeader groupName="Title">
 							<jr:cell style="Table_CH" height="25">
 								<textField>
-									<reportElement x="0" y="0" width="360" height="25" uuid="335399b9-8031-4daf-867c-b3c5349fd219"/>
-									<textFieldExpression><![CDATA[$F{TimeStamp}]]></textFieldExpression>
+									<reportElement x="0" y="0" width="180" height="25" uuid="f489a00c-35ab-43c2-b916-ceb8bf3ec8bf"/>
+									<textFieldExpression><![CDATA[$F{Title}]]></textFieldExpression>
 								</textField>
 							</jr:cell>
 						</jr:groupHeader>
-						<jr:column width="90" uuid="a422d8b5-6dde-447d-9bee-3f4364329c03">
+						<jr:column width="90" uuid="11a04c4c-5891-4fed-925e-d6684164ed79">
 							<jr:tableHeader style="Table_TH" height="30">
 								<textField>
-									<reportElement mode="Transparent" x="0" y="0" width="90" height="30" forecolor="#006699" backcolor="#E6E6E6" uuid="373bead6-9001-494d-bdba-d20f36af4460"/>
+									<reportElement mode="Transparent" x="0" y="0" width="90" height="30" forecolor="#006699" backcolor="#E6E6E6" uuid="8e307c89-fc8a-4658-94ba-f2b05e75019d"/>
 									<textElement>
 										<font size="19" isBold="true"/>
 									</textElement>
@@ -139,29 +137,29 @@ WHERE TimeStamp between '01-04-2020' and '01-05-2020']]>
 							<jr:tableFooter style="Table_TH" height="30"/>
 							<jr:columnHeader style="Table_CH" height="30">
 								<staticText>
-									<reportElement mode="Transparent" x="0" y="0" width="90" height="30" forecolor="#006699" backcolor="#E6E6E6" uuid="f48a5bf1-74a5-4fb9-aa4c-05a2714b22ce"/>
+									<reportElement mode="Transparent" x="0" y="0" width="90" height="30" forecolor="#006699" backcolor="#E6E6E6" uuid="6d60713d-b6f0-4876-bb36-387e23021cce"/>
 									<textElement textAlignment="Center">
 										<font size="14" isBold="true"/>
 									</textElement>
-									<text><![CDATA[ISBN]]></text>
+									<text><![CDATA[Title]]></text>
 								</staticText>
 							</jr:columnHeader>
 							<jr:columnFooter style="Table_CH" height="30"/>
 							<jr:detailCell style="Table_TD" height="30">
 								<textField>
-									<reportElement key="" x="0" y="0" width="90" height="30" uuid="b3f325c7-31b0-419d-9aa7-9dcc6756b2ca"/>
+									<reportElement key="" x="0" y="0" width="90" height="30" uuid="defe6420-1b95-4fce-bb86-c1cc8fdf9fe9"/>
 									<box leftPadding="2"/>
 									<textElement>
 										<font fontName="Arial" size="14"/>
 									</textElement>
-									<textFieldExpression><![CDATA[$F{ISBN}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{Title}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="90" uuid="338d5580-ecd3-4d3c-9e1a-ee7cde27052f">
+						<jr:column width="90" uuid="5695e557-1b1f-415b-8d0f-68ea463d1b5b">
 							<jr:tableHeader style="Table_TH" height="30">
 								<textField>
-									<reportElement mode="Transparent" x="0" y="0" width="90" height="30" forecolor="#006699" backcolor="#E6E6E6" uuid="ffe7b679-1136-4b75-a2fb-60680c3f6c44"/>
+									<reportElement mode="Transparent" x="0" y="0" width="90" height="30" forecolor="#006699" backcolor="#E6E6E6" uuid="34df7ee5-386f-4656-9cde-187db99982c6"/>
 									<textElement>
 										<font size="19" isBold="true"/>
 									</textElement>
@@ -171,86 +169,22 @@ WHERE TimeStamp between '01-04-2020' and '01-05-2020']]>
 							<jr:tableFooter style="Table_TH" height="30"/>
 							<jr:columnHeader style="Table_CH" height="30">
 								<staticText>
-									<reportElement mode="Transparent" x="0" y="0" width="90" height="30" forecolor="#006699" backcolor="#E6E6E6" uuid="19ef1bc3-1fdd-431a-ad3c-8a9ed5e61072"/>
+									<reportElement mode="Transparent" x="0" y="0" width="90" height="30" forecolor="#006699" backcolor="#E6E6E6" uuid="14c3eef1-19d3-4050-9e81-0be2e7f43e77"/>
 									<textElement textAlignment="Center">
 										<font size="14" isBold="true"/>
 									</textElement>
-									<text><![CDATA[UserName]]></text>
+									<text><![CDATA[QUANTITY]]></text>
 								</staticText>
 							</jr:columnHeader>
 							<jr:columnFooter style="Table_CH" height="30"/>
 							<jr:detailCell style="Table_TD" height="30">
 								<textField>
-									<reportElement key="" x="0" y="0" width="90" height="30" uuid="ebd6a9a1-7da5-4043-9ec9-84bb6562aaf5"/>
+									<reportElement key="" x="0" y="0" width="90" height="30" uuid="07dbe4fe-0e35-401c-afeb-36b78930f1d1"/>
 									<box leftPadding="2"/>
 									<textElement>
 										<font fontName="Arial" size="14"/>
 									</textElement>
-									<textFieldExpression><![CDATA[$F{UserName}]]></textFieldExpression>
-								</textField>
-							</jr:detailCell>
-						</jr:column>
-						<jr:column width="90" uuid="e3056206-4748-464c-8881-59b36cdb16a1">
-							<jr:tableHeader style="Table_TH" height="30">
-								<textField>
-									<reportElement mode="Transparent" x="0" y="0" width="90" height="30" forecolor="#006699" backcolor="#E6E6E6" uuid="8d597e9d-add4-4804-81c0-d3d49ecea38e"/>
-									<textElement>
-										<font size="19" isBold="true"/>
-									</textElement>
-									<textFieldExpression><![CDATA["Header"]]></textFieldExpression>
-								</textField>
-							</jr:tableHeader>
-							<jr:tableFooter style="Table_TH" height="30"/>
-							<jr:columnHeader style="Table_CH" height="30">
-								<staticText>
-									<reportElement mode="Transparent" x="0" y="0" width="90" height="30" forecolor="#006699" backcolor="#E6E6E6" uuid="f4f9c880-8048-4757-a9a1-2f1b4c56c449"/>
-									<textElement textAlignment="Center">
-										<font size="14" isBold="true"/>
-									</textElement>
-									<text><![CDATA[Quantity]]></text>
-								</staticText>
-							</jr:columnHeader>
-							<jr:columnFooter style="Table_CH" height="30"/>
-							<jr:detailCell style="Table_TD" height="30">
-								<textField>
-									<reportElement key="" x="0" y="0" width="90" height="30" uuid="ca04e62d-aa90-465b-a81b-7c0597da5649"/>
-									<box leftPadding="2"/>
-									<textElement>
-										<font fontName="Arial" size="14"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$F{Quantity}]]></textFieldExpression>
-								</textField>
-							</jr:detailCell>
-						</jr:column>
-						<jr:column width="90" uuid="a98c921f-d21b-4497-b101-c8159b302687">
-							<jr:tableHeader style="Table_TH" height="30">
-								<textField>
-									<reportElement mode="Transparent" x="0" y="0" width="90" height="30" forecolor="#006699" backcolor="#E6E6E6" uuid="17ff2c2b-3ff6-411d-812f-00ce028224b6"/>
-									<textElement>
-										<font size="19" isBold="true"/>
-									</textElement>
-									<textFieldExpression><![CDATA["Header"]]></textFieldExpression>
-								</textField>
-							</jr:tableHeader>
-							<jr:tableFooter style="Table_TH" height="30"/>
-							<jr:columnHeader style="Table_CH" height="30">
-								<staticText>
-									<reportElement mode="Transparent" x="0" y="0" width="90" height="30" forecolor="#006699" backcolor="#E6E6E6" uuid="9427702a-e6c3-4a8c-9cec-c3f870c5dc81"/>
-									<textElement textAlignment="Center">
-										<font size="14" isBold="true"/>
-									</textElement>
-									<text><![CDATA[TimeStamp]]></text>
-								</staticText>
-							</jr:columnHeader>
-							<jr:columnFooter style="Table_CH" height="30"/>
-							<jr:detailCell style="Table_TD" height="30">
-								<textField>
-									<reportElement key="" x="0" y="0" width="90" height="30" uuid="9afe55b5-28b0-4ded-a48b-34a5bebaeab2"/>
-									<box leftPadding="2"/>
-									<textElement>
-										<font fontName="Arial" size="14"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$F{TimeStamp}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{QUANTITY}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
